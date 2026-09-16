@@ -15,11 +15,15 @@ Validation distinguishes software conformance from external scientific validatio
 | Built wheel in a separate fresh environment | Installs offline with `--no-index --no-deps`; all ten examples and storage integrity pass; SQL/dashboard resources present |
 | Generated schemas/examples/API/catalogues | 30 artifacts checked for exact consistency |
 | Actual HTTP API lifecycle and role controls | Included in executable tests using a live local server |
-| Interactive Chromium workflow | Automated script supplied; local browser unavailable because Chromium download timed out; checked separately by the browser CI job |
-| Container build and lifecycle | Docker unavailable in the authoring environment; checked separately by the container CI job |
+| Interactive Chromium workflow | **PASS on GitHub Actions**: login, run, proof download/replay, graphs/adapters, mobile overflow, reviewer and role checks. Local Chromium download was unavailable. |
+| Container build and lifecycle | **PASS on GitHub Actions**: non-root readonly container, authenticated API, 16 gates and proof replay. Docker was unavailable locally. |
 | External scientific validation, penetration/load testing | Not performed; not implied by this release |
 
 Machine-readable [local report](validation/local/report.json), [individual test log](validation/local/tests.log), [package check](validation/package-check.log), and [clean-environment check](validation/clean-environment.json) preserve the observations. `software.code_digest` and per-file digests identify the exact executed application. The report's `git_commit` is the checkout HEAD at local test time, before initial publication, so it alone does not identify previously uncommitted implementation files; the complete code digests do. Runtime directories and keys are not committed.
+
+## Confirmed GitHub acceptance
+
+[Workflow run 35111310416](https://github.com/Vados992/FCA/actions/runs/35111310416), source commit `e9a8922ed605380e9a2ad240a58464bfcdb37c14`, completed successfully on 16 September 2026. **All five jobs passed**: Python 3.11, 3.12 and 3.13 (full tests, ten proof replays, isolated package install), Docker lifecycle, and Chromium browser acceptance. [Recorded job results](validation/ci-acceptance.json) link directly to each job. The application code digest is `486d243a37fbb2e7800d7d13411841a0666ec2935beb11157885c25fdc0ca442`. Subsequent documentation-only changes do not alter that code digest.
 
 ## Reproduce verification
 

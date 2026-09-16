@@ -4,6 +4,8 @@
 
 System architect: **Vadym Tsinderhoz**
 
+[![FCEA validation](https://github.com/Vados992/FCA/actions/workflows/ci.yml/badge.svg)](https://github.com/Vados992/FCA/actions/workflows/ci.yml)
+
 [Русская инструкция](docs/README_RU.md) · [Architecture](docs/ARCHITECTURE.md) · [Methods](docs/METHODS.md) · [API](docs/API.md) · [Validation](docs/VALIDATION.md)
 
 A runnable implementation of the supplied [FCEA v1.0 architecture](docs/reference/FCEA_v1.0_Architecture_Vadym_Tsinderhoz.pdf). It stores immutable evidence, freezes research protocols, executes numerical domain methods through 16 mandatory gates, and exports reproducible proof packets. The repository name is FCA; the Python package and architecture name are FCEA.
