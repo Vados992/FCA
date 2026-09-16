@@ -1,0 +1,50 @@
+/* No external scripts, analytics, cookies or persistent token storage. */
+'use strict';
+let token='', selectedRun=null, runs=[], graphs={}, identity=null;
+const byId=id=>document.getElementById(id);
+const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
+const message=(text,error=false)=>{byId('message').textContent=text;byId('message').className=error?'error':'';};
+async function api(path,body){
+  const r=await fetch(path,{method:body===undefined?'GET':'POST',headers:{Authorization:'Bearer '+token,...(body===undefined?{}:{'Content-Type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});
+  const data=await r.json();if(!r.ok)throw new Error(data.error||'Request failed');return data;
+}
+function badge(state){return el('span',state,'badge'+(['PASS','SUPPORTED','VALID'].includes(state)?'':['FAIL','FALSIFIED','ERROR','MODEL_INVALID'].includes(state)?' bad':' uncertain'));}
+function pretty(value){return el('pre',JSON.stringify(value,null,2));}
+function section(title,value){const d=el('details');d.append(el('summary',title),pretty(value));return d;}
+async function allObjects(kind){let entries=[];for(let offset=0;;offset+=200){const page=await api('/v1/objects?kind='+encodeURIComponent(kind)+'&limit=200&offset='+offset);entries.push(...page);if(page.length<200)return entries;}}
+async function load(){
+  const [health,objects,protocols,examples,adapters,graphData]=await Promise.all([api('/v1/health'),allObjects('RunRecord'),allObjects('ProtocolSpec'),api('/v1/examples'),api('/v1/adapters'),api('/v1/graphs')]);
+  byId('objects-count').textContent=health.objects;runs=objects.map(x=>x.payload).reverse();byId('runs-count').textContent=runs.length;byId('adapters-count').textContent=adapters.length;
+  const selectedProtocol=byId('protocol-select').value;byId('protocol-select').replaceChildren(el('option','Select protocol'));byId('protocol-select').firstChild.value='';
+  protocols.forEach(entry=>{const option=el('option',entry.id);option.value=entry.id;byId('protocol-select').append(option);});
+  if(protocols.some(p=>p.id===selectedProtocol))byId('protocol-select').value=selectedProtocol;
+  if(!byId('example-select').options.length)examples.forEach(name=>{const o=el('option',name);o.value=name;byId('example-select').append(o);});
+  byId('run-list').replaceChildren();
+  if(!runs.length)byId('run-list').append(el('p','No runs yet. Load an example to begin.','empty'));
+  runs.forEach(run=>{const b=el('button',undefined,'run-button'+(run.id===selectedRun?' selected':''));b.append(el('strong',run.protocol_ref.replaceAll('_',' ')));const meta=el('div',undefined,'run-meta');meta.append(badge(run.verdict.scientific_state),el('span',new Date(run.manifest.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})));b.append(meta);b.onclick=()=>showRun(run);byId('run-list').append(b);});
+  byId('adapter-grid').replaceChildren();adapters.forEach(a=>{const card=el('article',undefined,'card adapter');card.append(el('p',a.domain.replaceAll('_',' '),'type'),el('h2',a.adapter_id.replaceAll('_',' ')));const methods=el('div');a.methods.forEach(m=>methods.append(el('code',m)));card.append(methods,el('p',a.limitations));card.append(section('Contract and assumptions',a));byId('adapter-grid').append(card);});
+  graphs=graphData;renderGraph();
+  if(selectedRun){const run=runs.find(r=>r.id===selectedRun);if(run)showRun(run);}
+  const isAnalyst=identity.roles.includes('analyst')||identity.roles.includes('admin');
+  byId('load-example').disabled=!isAnalyst;byId('run-protocol').disabled=!isAnalyst;
+}
+function showRun(run){
+  selectedRun=run.id;document.querySelectorAll('.run-button').forEach((b,i)=>b.classList.toggle('selected',runs[i].id===run.id));
+  const root=byId('run-detail');root.replaceChildren();const top=el('div',undefined,'detail-top');top.append(el('span',run.id,'run-id'),badge(run.verdict.scientific_state));root.append(top,el('h2',run.claim_ref.replaceAll('_',' ')),el('p',run.verdict.statement,'statement'));
+  if(run.analysis){const box=el('div',undefined,'estimate-box');const left=el('div');left.append(el('span',(run.analysis.estimand||run.analysis.metric||'Estimate').replaceAll('_',' '),'label'),el('strong',Number(run.analysis.estimate).toLocaleString(undefined,{maximumSignificantDigits:6})));const right=el('div');right.append(el('span','Validity','label'),badge(run.verdict.validity_state));if(run.analysis.interval){const ci=run.analysis.interval;right.append(el('p',`${Math.round(ci.level*100)}% interval: ${ci.low.toFixed(4)} to ${ci.high.toFixed(4)}`));}box.append(left,right);root.append(box);}
+  root.append(el('h3','Decision checks'));const gates=el('div',undefined,'gates');
+  run.gates.slice().sort((a,b)=>Number(a.gate_id.slice(1))-Number(b.gate_id.slice(1))).forEach(g=>{const cell=el('div',undefined,'gate'+(g.outcome==='PASS'?'':' fail'));const title=el('strong',g.gate_id);title.append(el('span',g.outcome==='PASS'?'✓':'!','check'));cell.append(title,el('small',g.name));cell.title=g.outcome+(g.blockers.length?' · '+g.blockers.join('; '):'');gates.append(cell);});root.append(gates);
+  if(run.verdict.blockers.length)root.append(section('Blockers',run.verdict.blockers));
+  const actions=el('div',undefined,'actions');const proof=el('button','Download proof packet');proof.disabled=!(identity.roles.includes('analyst')||identity.roles.includes('admin'));
+  proof.onclick=async()=>{proof.disabled=true;try{const p=await api(`/v1/runs/${encodeURIComponent(run.id)}/proof`,{});const r=await fetch('/v1/proofs/'+encodeURIComponent(p.id),{headers:{Authorization:'Bearer '+token}});if(!r.ok)throw new Error('Proof download failed');const blob=await r.blob();const url=URL.createObjectURL(blob);const link=el('a');link.href=url;link.download=p.id+'.zip';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('Proof packet exported with source and code hashes.');}catch(e){message(e.message,true);}finally{proof.disabled=false;}};
+  actions.append(proof);root.append(actions);
+  root.append(section('Scope and prohibited stronger claims',{scope_ref:run.verdict.scope_ref,prohibited_claims:run.verdict.prohibited_claims,scope_note:run.verdict.scope_note}),section('Estimate and uncertainty',run.analysis),section('Alternative scenarios',run.counterfactuals),section('Falsification tests',run.falsification),section('Source independence',run.independence),section('Reproduction',run.reproduction),section('Gate records',run.gates),section('Run manifest',run.manifest));
+  if(identity.roles.includes('reviewer')||identity.roles.includes('admin')){const form=el('form');const title=el('h3','Record a review');const select=el('select');select.setAttribute('aria-label','Review disposition');['APPROVE','DOWNGRADE','REJECT','RERUN_REQUIRED'].forEach(a=>{const o=el('option',a);o.value=a;select.append(o);});const reason=el('input');reason.placeholder='Rationale';reason.required=true;reason.setAttribute('aria-label','Review rationale');const button=el('button','Submit review');form.append(title,select,reason,button);form.onsubmit=async e=>{e.preventDefault();try{await api('/v1/reviews/'+encodeURIComponent(run.id),{action:select.value,reason:reason.value});message('Immutable review recorded. The machine verdict is preserved.');reason.value='';}catch(error){message(error.message,true);}};root.append(form);}
+}
+function renderGraph(){const graph=graphs[byId('graph-select').value];if(!graph)return;byId('graph-summary').textContent=`${graph.nodes.length} nodes · ${graph.edges.length} relationships · ${graph.cross_graph_refs.length} cross-graph references`;byId('graph-body').replaceChildren();graph.edges.forEach(edge=>{const row=el('tr');row.append(el('td',edge.from),el('td',edge.relation),el('td',edge.to));byId('graph-body').append(row);});if(!graph.edges.length){const row=el('tr');const cell=el('td','No relationships registered for this graph yet.');cell.colSpan=3;row.append(cell);byId('graph-body').append(row);}}
+byId('login-form').onsubmit=async e=>{e.preventDefault();token=byId('token').value.trim();try{identity=await api('/v1/identity');await load();byId('login').hidden=true;byId('workspace').hidden=false;byId('disconnect').hidden=false;byId('connection-state').textContent=identity.name+' · connected';byId('token').value='';message('Workspace connected.');}catch(error){token='';message(error.message,true);}};
+byId('disconnect').onclick=()=>{token='';identity=null;selectedRun=null;runs=[];graphs={};byId('workspace').hidden=true;byId('login').hidden=false;byId('disconnect').hidden=true;byId('connection-state').textContent='Disconnected';byId('run-detail').replaceChildren();message('Disconnected.');};
+byId('refresh').onclick=()=>load().catch(e=>message(e.message,true));byId('graph-select').onchange=renderGraph;
+byId('load-example').onclick=async()=>{const button=byId('load-example');button.disabled=true;try{const result=await api('/v1/demos',{name:byId('example-select').value});await load();byId('protocol-select').value=result.protocol_ref;message('Synthetic example loaded. Its protocol is ready to freeze and run.');}catch(e){message(e.message,true);}finally{button.disabled=false;}};
+byId('run-protocol').onclick=async()=>{const ref=byId('protocol-select').value;if(!ref){message('Select a protocol first.',true);return;}const button=byId('run-protocol');button.disabled=true;button.textContent='Running…';try{await api('/v1/protocols/'+encodeURIComponent(ref)+'/freeze',{});const run=await api('/v1/runs',{protocol_ref:ref});selectedRun=run.id;await load();message('Run complete: '+run.verdict.scientific_state+'.',run.verdict.execution_state==='ERROR');}catch(e){message(e.message,true);}finally{button.disabled=false;button.textContent='Freeze & run';}};
+document.querySelectorAll('.nav').forEach(button=>button.onclick=()=>{document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n===button));document.querySelectorAll('.tab').forEach(n=>n.hidden=n.id!==button.dataset.tab+'-tab');document.querySelector('h1').textContent=button.textContent;});

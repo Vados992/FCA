@@ -1,0 +1,786 @@
+{
+  "description": "SYNTHETIC; no empirical validation claim.",
+  "expected": {
+    "all_gates": "PASS",
+    "scientific_state": "SUPPORTED",
+    "validity_state": "VALID"
+  },
+  "protocol_ref": "physics.protocol",
+  "records": [
+    {
+      "kind": "ScopeSpec",
+      "payload": {
+        "assumptions": [
+          "oscillator_regime"
+        ],
+        "domains": [
+          "physics"
+        ],
+        "end": "2026-01-01T00:00:00Z",
+        "id": "physics.scope",
+        "model_families": [
+          "physics.oscillator_recurrence"
+        ],
+        "populations": [
+          "synthetic-physics"
+        ],
+        "precision": "synthetic-units-v1",
+        "regimes": [
+          "synthetic"
+        ],
+        "start": "2025-01-01T00:00:00Z"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "physics.data",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "physics.scope",
+        "selector": "/data",
+        "source_ref": "physics.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "physics.negative",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "physics.scope",
+        "selector": "/negative_control",
+        "source_ref": "physics.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "physics.design",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "physics.scope",
+        "selector": "/design",
+        "source_ref": "physics.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "physics.design"
+        ],
+        "id": "physics.assumption.oscillator_regime",
+        "key": "oscillator_regime",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "oscillator regime",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "ImplementationSpec",
+      "payload": {
+        "adapter_id": "physics",
+        "adapter_version": "1.0.0",
+        "core_version": "1.0.0",
+        "id": "physics.implementation",
+        "method": "oscillator_recurrence"
+      }
+    },
+    {
+      "kind": "ModelSpec",
+      "payload": {
+        "assumption_refs": [
+          "physics.assumption.oscillator_regime"
+        ],
+        "causal_graph": {},
+        "equations": "See docs/METHODS.md and the pinned implementation.",
+        "estimand": null,
+        "family": "physics.oscillator_recurrence",
+        "id": "physics.model",
+        "implementation_ref": "physics.implementation",
+        "scope_ref": "physics.scope"
+      }
+    },
+    {
+      "kind": "TestSpec",
+      "payload": {
+        "accept": "abs_lte",
+        "column": "zero",
+        "evidence_ref": "physics.negative",
+        "id": "physics.test.negative",
+        "kind": "negative_control",
+        "metric": "max_abs",
+        "target": "model",
+        "threshold": 1e-09
+      }
+    },
+    {
+      "kind": "HypothesisSpec",
+      "payload": {
+        "alternatives": [
+          "Generator/model mismatch",
+          "Measurement or selection error",
+          "Counterfactual sensitivity"
+        ],
+        "falsification_tests": [
+          "physics.test.negative"
+        ],
+        "id": "physics.hypothesis",
+        "null": "No effect or incompatibility under the specified operational metric.",
+        "proposition": "The frozen operational test passes in the synthetic scope."
+      }
+    },
+    {
+      "kind": "ClaimSpec",
+      "payload": {
+        "claim_type": "EXISTENTIAL",
+        "hypothesis_ref": "physics.hypothesis",
+        "id": "physics.claim",
+        "mandatory_dependencies": [
+          "physics.data"
+        ],
+        "model_ref": "physics.model",
+        "proposition": "Synthetic physics benchmark meets its declared operational criterion.",
+        "scope_ref": "physics.scope"
+      }
+    },
+    {
+      "kind": "EvidenceLink",
+      "payload": {
+        "claim_ref": "physics.claim",
+        "evidence_ref": "physics.data",
+        "id": "physics.support",
+        "role": "supports"
+      }
+    },
+    {
+      "kind": "CounterfactualSpec",
+      "payload": {
+        "changes": {
+          "mass": 1.1
+        },
+        "description": "Preregistered alternative parameter scenario for this synthetic benchmark.",
+        "evidence_refs": [
+          "physics.design"
+        ],
+        "id": "physics.counterfactual"
+      }
+    },
+    {
+      "kind": "ProtocolSpec",
+      "payload": {
+        "claim_ref": "physics.claim",
+        "counterfactual_refs": [
+          "physics.counterfactual"
+        ],
+        "cutoff": "2026-01-01T00:00:00Z",
+        "dataset_ref": "physics.data",
+        "id": "physics.protocol",
+        "parameters": {
+          "closure_tolerance": 1e-06,
+          "energy_relative_tolerance": 1e-06,
+          "mass": 1.0,
+          "model_residual_tolerance": 1e-06,
+          "omega": 1.0
+        },
+        "registration": "retrospective",
+        "research_question": "Reproduce the physics synthetic operational test.",
+        "robustness_sign_required": false,
+        "seed": 3819,
+        "test_refs": [
+          "physics.test.negative"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "content": {
+        "data": [
+          {
+            "id": "row-0",
+            "t": 0.0,
+            "v": -0.0,
+            "x": 1.0
+          },
+          {
+            "id": "row-1",
+            "t": 0.09817477042468103,
+            "v": -0.0980171403295606,
+            "x": 0.9951847266721969
+          },
+          {
+            "id": "row-2",
+            "t": 0.19634954084936207,
+            "v": -0.19509032201612825,
+            "x": 0.9807852804032304
+          },
+          {
+            "id": "row-3",
+            "t": 0.2945243112740431,
+            "v": -0.29028467725446233,
+            "x": 0.9569403357322088
+          },
+          {
+            "id": "row-4",
+            "t": 0.39269908169872414,
+            "v": -0.3826834323650898,
+            "x": 0.9238795325112867
+          },
+          {
+            "id": "row-5",
+            "t": 0.4908738521234052,
+            "v": -0.47139673682599764,
+            "x": 0.881921264348355
+          },
+          {
+            "id": "row-6",
+            "t": 0.5890486225480862,
+            "v": -0.5555702330196022,
+            "x": 0.8314696123025452
+          },
+          {
+            "id": "row-7",
+            "t": 0.6872233929727672,
+            "v": -0.6343932841636455,
+            "x": 0.773010453362737
+          },
+          {
+            "id": "row-8",
+            "t": 0.7853981633974483,
+            "v": -0.7071067811865475,
+            "x": 0.7071067811865476
+          },
+          {
+            "id": "row-9",
+            "t": 0.8835729338221293,
+            "v": -0.773010453362737,
+            "x": 0.6343932841636455
+          },
+          {
+            "id": "row-10",
+            "t": 0.9817477042468103,
+            "v": -0.8314696123025452,
+            "x": 0.5555702330196023
+          },
+          {
+            "id": "row-11",
+            "t": 1.0799224746714913,
+            "v": -0.8819212643483549,
+            "x": 0.4713967368259978
+          },
+          {
+            "id": "row-12",
+            "t": 1.1780972450961724,
+            "v": -0.9238795325112867,
+            "x": 0.38268343236508984
+          },
+          {
+            "id": "row-13",
+            "t": 1.2762720155208536,
+            "v": -0.9569403357322089,
+            "x": 0.29028467725446233
+          },
+          {
+            "id": "row-14",
+            "t": 1.3744467859455345,
+            "v": -0.9807852804032304,
+            "x": 0.19509032201612833
+          },
+          {
+            "id": "row-15",
+            "t": 1.4726215563702154,
+            "v": -0.9951847266721968,
+            "x": 0.09801714032956077
+          },
+          {
+            "id": "row-16",
+            "t": 1.5707963267948966,
+            "v": -1.0,
+            "x": 6.123233995736766e-17
+          },
+          {
+            "id": "row-17",
+            "t": 1.6689710972195777,
+            "v": -0.9951847266721969,
+            "x": -0.09801714032956065
+          },
+          {
+            "id": "row-18",
+            "t": 1.7671458676442586,
+            "v": -0.9807852804032304,
+            "x": -0.1950903220161282
+          },
+          {
+            "id": "row-19",
+            "t": 1.8653206380689396,
+            "v": -0.9569403357322089,
+            "x": -0.29028467725446216
+          },
+          {
+            "id": "row-20",
+            "t": 1.9634954084936207,
+            "v": -0.9238795325112867,
+            "x": -0.3826834323650897
+          },
+          {
+            "id": "row-21",
+            "t": 2.061670178918302,
+            "v": -0.881921264348355,
+            "x": -0.4713967368259977
+          },
+          {
+            "id": "row-22",
+            "t": 2.1598449493429825,
+            "v": -0.8314696123025455,
+            "x": -0.555570233019602
+          },
+          {
+            "id": "row-23",
+            "t": 2.2580197197676637,
+            "v": -0.7730104533627371,
+            "x": -0.6343932841636454
+          },
+          {
+            "id": "row-24",
+            "t": 2.356194490192345,
+            "v": -0.7071067811865476,
+            "x": -0.7071067811865475
+          },
+          {
+            "id": "row-25",
+            "t": 2.454369260617026,
+            "v": -0.6343932841636455,
+            "x": -0.773010453362737
+          },
+          {
+            "id": "row-26",
+            "t": 2.552544031041707,
+            "v": -0.5555702330196022,
+            "x": -0.8314696123025453
+          },
+          {
+            "id": "row-27",
+            "t": 2.650718801466388,
+            "v": -0.47139673682599786,
+            "x": -0.8819212643483549
+          },
+          {
+            "id": "row-28",
+            "t": 2.748893571891069,
+            "v": -0.3826834323650899,
+            "x": -0.9238795325112867
+          },
+          {
+            "id": "row-29",
+            "t": 2.84706834231575,
+            "v": -0.2902846772544624,
+            "x": -0.9569403357322088
+          },
+          {
+            "id": "row-30",
+            "t": 2.945243112740431,
+            "v": -0.1950903220161286,
+            "x": -0.9807852804032304
+          },
+          {
+            "id": "row-31",
+            "t": 3.043417883165112,
+            "v": -0.09801714032956083,
+            "x": -0.9951847266721968
+          },
+          {
+            "id": "row-32",
+            "t": 3.141592653589793,
+            "v": -1.2246467991473532e-16,
+            "x": -1.0
+          },
+          {
+            "id": "row-33",
+            "t": 3.2397674240144743,
+            "v": 0.09801714032956059,
+            "x": -0.9951847266721969
+          },
+          {
+            "id": "row-34",
+            "t": 3.3379421944391554,
+            "v": 0.19509032201612836,
+            "x": -0.9807852804032304
+          },
+          {
+            "id": "row-35",
+            "t": 3.436116964863836,
+            "v": 0.2902846772544621,
+            "x": -0.9569403357322089
+          },
+          {
+            "id": "row-36",
+            "t": 3.5342917352885173,
+            "v": 0.38268343236508967,
+            "x": -0.9238795325112868
+          },
+          {
+            "id": "row-37",
+            "t": 3.6324665057131984,
+            "v": 0.47139673682599764,
+            "x": -0.881921264348355
+          },
+          {
+            "id": "row-38",
+            "t": 3.730641276137879,
+            "v": 0.555570233019602,
+            "x": -0.8314696123025455
+          },
+          {
+            "id": "row-39",
+            "t": 3.8288160465625602,
+            "v": 0.6343932841636453,
+            "x": -0.7730104533627371
+          },
+          {
+            "id": "row-40",
+            "t": 3.9269908169872414,
+            "v": 0.7071067811865475,
+            "x": -0.7071067811865477
+          },
+          {
+            "id": "row-41",
+            "t": 4.025165587411922,
+            "v": 0.7730104533627367,
+            "x": -0.6343932841636459
+          },
+          {
+            "id": "row-42",
+            "t": 4.123340357836604,
+            "v": 0.8314696123025452,
+            "x": -0.5555702330196022
+          },
+          {
+            "id": "row-43",
+            "t": 4.221515128261284,
+            "v": 0.8819212643483549,
+            "x": -0.47139673682599786
+          },
+          {
+            "id": "row-44",
+            "t": 4.319689898685965,
+            "v": 0.9238795325112865,
+            "x": -0.38268343236509034
+          },
+          {
+            "id": "row-45",
+            "t": 4.417864669110647,
+            "v": 0.9569403357322088,
+            "x": -0.29028467725446244
+          },
+          {
+            "id": "row-46",
+            "t": 4.516039439535327,
+            "v": 0.9807852804032303,
+            "x": -0.19509032201612866
+          },
+          {
+            "id": "row-47",
+            "t": 4.614214209960009,
+            "v": 0.9951847266721969,
+            "x": -0.09801714032956045
+          },
+          {
+            "id": "row-48",
+            "t": 4.71238898038469,
+            "v": 1.0,
+            "x": -1.8369701987210297e-16
+          },
+          {
+            "id": "row-49",
+            "t": 4.81056375080937,
+            "v": 0.9951847266721969,
+            "x": 0.09801714032956009
+          },
+          {
+            "id": "row-50",
+            "t": 4.908738521234052,
+            "v": 0.9807852804032304,
+            "x": 0.1950903220161283
+          },
+          {
+            "id": "row-51",
+            "t": 5.006913291658733,
+            "v": 0.9569403357322089,
+            "x": 0.29028467725446205
+          },
+          {
+            "id": "row-52",
+            "t": 5.105088062083414,
+            "v": 0.9238795325112866,
+            "x": 0.38268343236509
+          },
+          {
+            "id": "row-53",
+            "t": 5.203262832508095,
+            "v": 0.881921264348355,
+            "x": 0.4713967368259976
+          },
+          {
+            "id": "row-54",
+            "t": 5.301437602932776,
+            "v": 0.8314696123025455,
+            "x": 0.5555702330196018
+          },
+          {
+            "id": "row-55",
+            "t": 5.399612373357457,
+            "v": 0.7730104533627369,
+            "x": 0.6343932841636456
+          },
+          {
+            "id": "row-56",
+            "t": 5.497787143782138,
+            "v": 0.7071067811865477,
+            "x": 0.7071067811865474
+          },
+          {
+            "id": "row-57",
+            "t": 5.595961914206819,
+            "v": 0.6343932841636459,
+            "x": 0.7730104533627367
+          },
+          {
+            "id": "row-58",
+            "t": 5.6941366846315,
+            "v": 0.5555702330196022,
+            "x": 0.8314696123025452
+          },
+          {
+            "id": "row-59",
+            "t": 5.792311455056181,
+            "v": 0.4713967368259979,
+            "x": 0.8819212643483548
+          },
+          {
+            "id": "row-60",
+            "t": 5.890486225480862,
+            "v": 0.3826834323650904,
+            "x": 0.9238795325112865
+          },
+          {
+            "id": "row-61",
+            "t": 5.988660995905543,
+            "v": 0.2902846772544625,
+            "x": 0.9569403357322088
+          },
+          {
+            "id": "row-62",
+            "t": 6.086835766330224,
+            "v": 0.19509032201612872,
+            "x": 0.9807852804032303
+          },
+          {
+            "id": "row-63",
+            "t": 6.1850105367549055,
+            "v": 0.0980171403295605,
+            "x": 0.9951847266721969
+          },
+          {
+            "id": "row-64",
+            "t": 6.283185307179586,
+            "v": 2.4492935982947064e-16,
+            "x": 1.0
+          }
+        ],
+        "design": [
+          {
+            "assumptions": [
+              "oscillator_regime"
+            ],
+            "generator": "fcea.examples.builders.v1",
+            "id": "design",
+            "note": "Declared properties of the synthetic generator, not empirical certificates.",
+            "seed": 9281,
+            "synthetic": true
+          }
+        ],
+        "negative_control": [
+          {
+            "id": "nc-0",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-1",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-2",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-3",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-4",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-5",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-6",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-7",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-8",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-9",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-10",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-11",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-12",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-13",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-14",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-15",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-16",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-17",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-18",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-19",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-20",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-21",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-22",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-23",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-24",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-25",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-26",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-27",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-28",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-29",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-30",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-31",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-32",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-33",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-34",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-35",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-36",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-37",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-38",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-39",
+            "zero": 0.0
+          }
+        ]
+      },
+      "metadata": {
+        "dependency_keys": [
+          "fcea-synthetic-generator-seed-9281"
+        ],
+        "id": "physics.source",
+        "known_at": "2025-12-31T00:00:00Z",
+        "legal_basis": "Author-generated synthetic benchmark data",
+        "media_type": "application/json",
+        "origin": "synthetic://fcea/physics",
+        "redistributable": true,
+        "synthetic": true
+      }
+    }
+  ]
+}

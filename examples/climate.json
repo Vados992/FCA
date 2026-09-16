@@ -1,0 +1,727 @@
+{
+  "description": "SYNTHETIC; no empirical validation claim.",
+  "expected": {
+    "all_gates": "PASS",
+    "scientific_state": "SUPPORTED",
+    "validity_state": "VALID"
+  },
+  "protocol_ref": "climate.protocol",
+  "records": [
+    {
+      "kind": "ScopeSpec",
+      "payload": {
+        "assumptions": [
+          "independent_residuals",
+          "fixed_fingerprint",
+          "measurement_validity"
+        ],
+        "domains": [
+          "climate"
+        ],
+        "end": "2026-01-01T00:00:00Z",
+        "id": "climate.scope",
+        "model_families": [
+          "climate.single_fingerprint_iid"
+        ],
+        "populations": [
+          "synthetic-climate"
+        ],
+        "precision": "synthetic-units-v1",
+        "regimes": [
+          "synthetic"
+        ],
+        "start": "2025-01-01T00:00:00Z"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "climate.data",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "climate.scope",
+        "selector": "/data",
+        "source_ref": "climate.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "climate.negative",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "climate.scope",
+        "selector": "/negative_control",
+        "source_ref": "climate.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "climate.design",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "climate.scope",
+        "selector": "/design",
+        "source_ref": "climate.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "climate.design"
+        ],
+        "id": "climate.assumption.independent_residuals",
+        "key": "independent_residuals",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "independent residuals",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "climate.design"
+        ],
+        "id": "climate.assumption.fixed_fingerprint",
+        "key": "fixed_fingerprint",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "fixed fingerprint",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "climate.design"
+        ],
+        "id": "climate.assumption.measurement_validity",
+        "key": "measurement_validity",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "measurement validity",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "ImplementationSpec",
+      "payload": {
+        "adapter_id": "climate",
+        "adapter_version": "1.0.0",
+        "core_version": "1.0.0",
+        "id": "climate.implementation",
+        "method": "single_fingerprint_iid"
+      }
+    },
+    {
+      "kind": "ModelSpec",
+      "payload": {
+        "assumption_refs": [
+          "climate.assumption.independent_residuals",
+          "climate.assumption.fixed_fingerprint",
+          "climate.assumption.measurement_validity"
+        ],
+        "causal_graph": {},
+        "equations": "See docs/METHODS.md and the pinned implementation.",
+        "estimand": null,
+        "family": "climate.single_fingerprint_iid",
+        "id": "climate.model",
+        "implementation_ref": "climate.implementation",
+        "scope_ref": "climate.scope"
+      }
+    },
+    {
+      "kind": "TestSpec",
+      "payload": {
+        "accept": "abs_lte",
+        "column": "zero",
+        "evidence_ref": "climate.negative",
+        "id": "climate.test.negative",
+        "kind": "negative_control",
+        "metric": "max_abs",
+        "target": "model",
+        "threshold": 1e-09
+      }
+    },
+    {
+      "kind": "HypothesisSpec",
+      "payload": {
+        "alternatives": [
+          "Generator/model mismatch",
+          "Measurement or selection error",
+          "Counterfactual sensitivity"
+        ],
+        "falsification_tests": [
+          "climate.test.negative"
+        ],
+        "id": "climate.hypothesis",
+        "null": "No effect or incompatibility under the specified operational metric.",
+        "proposition": "The frozen operational test passes in the synthetic scope."
+      }
+    },
+    {
+      "kind": "ClaimSpec",
+      "payload": {
+        "claim_type": "ASSOCIATION",
+        "hypothesis_ref": "climate.hypothesis",
+        "id": "climate.claim",
+        "mandatory_dependencies": [
+          "climate.data"
+        ],
+        "model_ref": "climate.model",
+        "proposition": "Synthetic climate benchmark meets its declared operational criterion.",
+        "scope_ref": "climate.scope"
+      }
+    },
+    {
+      "kind": "EvidenceLink",
+      "payload": {
+        "claim_ref": "climate.claim",
+        "evidence_ref": "climate.data",
+        "id": "climate.support",
+        "role": "supports"
+      }
+    },
+    {
+      "kind": "CounterfactualSpec",
+      "payload": {
+        "changes": {
+          "forcing_scale": 1.1
+        },
+        "description": "Preregistered alternative parameter scenario for this synthetic benchmark.",
+        "evidence_refs": [
+          "climate.design"
+        ],
+        "id": "climate.counterfactual"
+      }
+    },
+    {
+      "kind": "ProtocolSpec",
+      "payload": {
+        "claim_ref": "climate.claim",
+        "counterfactual_refs": [
+          "climate.counterfactual"
+        ],
+        "cutoff": "2026-01-01T00:00:00Z",
+        "dataset_ref": "climate.data",
+        "id": "climate.protocol",
+        "parameters": {
+          "alpha": 0.05,
+          "forcing_scale": 1.0
+        },
+        "registration": "retrospective",
+        "research_question": "Reproduce the climate synthetic operational test.",
+        "robustness_sign_required": true,
+        "seed": 3819,
+        "test_refs": [
+          "climate.test.negative"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "content": {
+        "data": [
+          {
+            "fingerprint": 0.0,
+            "id": "row-0",
+            "observed": 0.40225357605830103
+          },
+          {
+            "fingerprint": 0.05,
+            "id": "row-1",
+            "observed": 0.39829603641690714
+          },
+          {
+            "fingerprint": 0.1,
+            "id": "row-2",
+            "observed": 0.41306721499687804
+          },
+          {
+            "fingerprint": 0.15,
+            "id": "row-3",
+            "observed": 0.4798432759484481
+          },
+          {
+            "fingerprint": 0.2,
+            "id": "row-4",
+            "observed": 0.6051349893175553
+          },
+          {
+            "fingerprint": 0.25,
+            "id": "row-5",
+            "observed": 0.5672692074973265
+          },
+          {
+            "fingerprint": 0.3,
+            "id": "row-6",
+            "observed": 0.6610588953068753
+          },
+          {
+            "fingerprint": 0.35,
+            "id": "row-7",
+            "observed": 0.7721689315047778
+          },
+          {
+            "fingerprint": 0.4,
+            "id": "row-8",
+            "observed": 0.8141779745861731
+          },
+          {
+            "fingerprint": 0.45,
+            "id": "row-9",
+            "observed": 0.7870689500868402
+          },
+          {
+            "fingerprint": 0.5,
+            "id": "row-10",
+            "observed": 0.8545811171381723
+          },
+          {
+            "fingerprint": 0.55,
+            "id": "row-11",
+            "observed": 1.080353385955539
+          },
+          {
+            "fingerprint": 0.6,
+            "id": "row-12",
+            "observed": 1.0231093452291413
+          },
+          {
+            "fingerprint": 0.65,
+            "id": "row-13",
+            "observed": 1.0320850191694393
+          },
+          {
+            "fingerprint": 0.7,
+            "id": "row-14",
+            "observed": 1.1211018637740517
+          },
+          {
+            "fingerprint": 0.75,
+            "id": "row-15",
+            "observed": 1.1019434952283673
+          },
+          {
+            "fingerprint": 0.8,
+            "id": "row-16",
+            "observed": 1.2422039300479761
+          },
+          {
+            "fingerprint": 0.85,
+            "id": "row-17",
+            "observed": 1.3426103577963988
+          },
+          {
+            "fingerprint": 0.9,
+            "id": "row-18",
+            "observed": 1.267536116999383
+          },
+          {
+            "fingerprint": 0.95,
+            "id": "row-19",
+            "observed": 1.4237446782780767
+          },
+          {
+            "fingerprint": 1.0,
+            "id": "row-20",
+            "observed": 1.4793549511844797
+          },
+          {
+            "fingerprint": 1.05,
+            "id": "row-21",
+            "observed": 1.5447066529258893
+          },
+          {
+            "fingerprint": 1.1,
+            "id": "row-22",
+            "observed": 1.574882085022459
+          },
+          {
+            "fingerprint": 1.15,
+            "id": "row-23",
+            "observed": 1.7076544545720216
+          },
+          {
+            "fingerprint": 1.2,
+            "id": "row-24",
+            "observed": 1.705574955303328
+          },
+          {
+            "fingerprint": 1.25,
+            "id": "row-25",
+            "observed": 1.8910643687312019
+          },
+          {
+            "fingerprint": 1.3,
+            "id": "row-26",
+            "observed": 1.9019372076578718
+          },
+          {
+            "fingerprint": 1.35,
+            "id": "row-27",
+            "observed": 1.9611764327170398
+          },
+          {
+            "fingerprint": 1.4,
+            "id": "row-28",
+            "observed": 1.9411426946224397
+          },
+          {
+            "fingerprint": 1.45,
+            "id": "row-29",
+            "observed": 2.08893976090816
+          },
+          {
+            "fingerprint": 1.5,
+            "id": "row-30",
+            "observed": 2.1125417875442047
+          },
+          {
+            "fingerprint": 1.55,
+            "id": "row-31",
+            "observed": 2.1589741344087527
+          },
+          {
+            "fingerprint": 1.6,
+            "id": "row-32",
+            "observed": 2.139341488309551
+          },
+          {
+            "fingerprint": 1.65,
+            "id": "row-33",
+            "observed": 2.1587449543170623
+          },
+          {
+            "fingerprint": 1.7,
+            "id": "row-34",
+            "observed": 2.4256822147973476
+          },
+          {
+            "fingerprint": 1.75,
+            "id": "row-35",
+            "observed": 2.3693347112277263
+          },
+          {
+            "fingerprint": 1.8,
+            "id": "row-36",
+            "observed": 2.4543688287244616
+          },
+          {
+            "fingerprint": 1.85,
+            "id": "row-37",
+            "observed": 2.501183994062023
+          },
+          {
+            "fingerprint": 1.9,
+            "id": "row-38",
+            "observed": 2.496673589596061
+          },
+          {
+            "fingerprint": 1.95,
+            "id": "row-39",
+            "observed": 2.6463125147107145
+          },
+          {
+            "fingerprint": 2.0,
+            "id": "row-40",
+            "observed": 2.759780070089771
+          },
+          {
+            "fingerprint": 2.05,
+            "id": "row-41",
+            "observed": 2.7903251618111664
+          },
+          {
+            "fingerprint": 2.1,
+            "id": "row-42",
+            "observed": 2.810507237140349
+          },
+          {
+            "fingerprint": 2.15,
+            "id": "row-43",
+            "observed": 2.927789549662976
+          },
+          {
+            "fingerprint": 2.2,
+            "id": "row-44",
+            "observed": 2.9035791610848536
+          },
+          {
+            "fingerprint": 2.25,
+            "id": "row-45",
+            "observed": 3.076565486797747
+          },
+          {
+            "fingerprint": 2.3,
+            "id": "row-46",
+            "observed": 3.0392609751015214
+          },
+          {
+            "fingerprint": 2.35,
+            "id": "row-47",
+            "observed": 3.0586439219132178
+          },
+          {
+            "fingerprint": 2.4,
+            "id": "row-48",
+            "observed": 3.163776547413488
+          },
+          {
+            "fingerprint": 2.45,
+            "id": "row-49",
+            "observed": 3.345981361681075
+          },
+          {
+            "fingerprint": 2.5,
+            "id": "row-50",
+            "observed": 3.2789490556231597
+          },
+          {
+            "fingerprint": 2.55,
+            "id": "row-51",
+            "observed": 3.358907675423253
+          },
+          {
+            "fingerprint": 2.6,
+            "id": "row-52",
+            "observed": 3.3485459503821455
+          },
+          {
+            "fingerprint": 2.65,
+            "id": "row-53",
+            "observed": 3.4548168739065623
+          },
+          {
+            "fingerprint": 2.7,
+            "id": "row-54",
+            "observed": 3.585644990903607
+          },
+          {
+            "fingerprint": 2.75,
+            "id": "row-55",
+            "observed": 3.673380078404196
+          },
+          {
+            "fingerprint": 2.8,
+            "id": "row-56",
+            "observed": 3.6751843818790353
+          },
+          {
+            "fingerprint": 2.85,
+            "id": "row-57",
+            "observed": 3.7701912345919877
+          },
+          {
+            "fingerprint": 2.9,
+            "id": "row-58",
+            "observed": 3.7948750761127297
+          },
+          {
+            "fingerprint": 2.95,
+            "id": "row-59",
+            "observed": 3.821278845569594
+          }
+        ],
+        "design": [
+          {
+            "assumptions": [
+              "independent_residuals",
+              "fixed_fingerprint",
+              "measurement_validity"
+            ],
+            "generator": "fcea.examples.builders.v1",
+            "id": "design",
+            "note": "Declared properties of the synthetic generator, not empirical certificates.",
+            "seed": 9281,
+            "synthetic": true
+          }
+        ],
+        "negative_control": [
+          {
+            "id": "nc-0",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-1",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-2",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-3",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-4",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-5",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-6",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-7",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-8",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-9",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-10",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-11",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-12",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-13",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-14",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-15",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-16",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-17",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-18",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-19",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-20",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-21",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-22",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-23",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-24",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-25",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-26",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-27",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-28",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-29",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-30",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-31",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-32",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-33",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-34",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-35",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-36",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-37",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-38",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-39",
+            "zero": 0.0
+          }
+        ]
+      },
+      "metadata": {
+        "dependency_keys": [
+          "fcea-synthetic-generator-seed-9281"
+        ],
+        "id": "climate.source",
+        "known_at": "2025-12-31T00:00:00Z",
+        "legal_basis": "Author-generated synthetic benchmark data",
+        "media_type": "application/json",
+        "origin": "synthetic://fcea/climate",
+        "redistributable": true,
+        "synthetic": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+include LICENSE NOTICE README.md runtime-lock.json requirements.txt
+recursive-include fcea *.sql *.html *.css *.js *.json

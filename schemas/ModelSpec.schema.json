@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assumption_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "causal_graph": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "type": "object"
+    },
+    "equations": {
+      "type": "string"
+    },
+    "estimand": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "family": {
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "implementation_ref": {
+      "type": "string"
+    },
+    "scope_ref": {
+      "type": "string"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "validity_predicates": {
+      "items": {
+        "additionalProperties": {},
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "family",
+    "scope_ref",
+    "implementation_ref",
+    "equations",
+    "assumption_refs"
+  ],
+  "title": "ModelSpec",
+  "type": "object"
+}

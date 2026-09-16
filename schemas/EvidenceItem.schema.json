@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "known_at": {
+      "type": "string"
+    },
+    "parent_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "scope_ref": {
+      "type": "string"
+    },
+    "selector": {
+      "type": "string"
+    },
+    "source_ref": {
+      "type": "string"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "transform": {
+      "enum": [
+        "json.pointer.v1",
+        "csv.rows.v1",
+        "text.v1"
+      ],
+      "type": "string"
+    },
+    "uncertainty": {
+      "additionalProperties": {},
+      "type": "object"
+    },
+    "units": {
+      "type": "string"
+    },
+    "valid_end": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "valid_start": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "value": {},
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "source_ref",
+    "scope_ref",
+    "known_at",
+    "transform"
+  ],
+  "title": "EvidenceItem",
+  "type": "object"
+}

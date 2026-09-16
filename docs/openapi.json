@@ -1,0 +1,1598 @@
+{
+  "components": {
+    "schemas": {
+      "AssumptionSpec": {
+        "$ref": "../schemas/AssumptionSpec.schema.json"
+      },
+      "ClaimSpec": {
+        "$ref": "../schemas/ClaimSpec.schema.json"
+      },
+      "ClosureSpec": {
+        "$ref": "../schemas/ClosureSpec.schema.json"
+      },
+      "CounterfactualSpec": {
+        "$ref": "../schemas/CounterfactualSpec.schema.json"
+      },
+      "CoverageSpec": {
+        "$ref": "../schemas/CoverageSpec.schema.json"
+      },
+      "EventSpec": {
+        "$ref": "../schemas/EventSpec.schema.json"
+      },
+      "EvidenceItem": {
+        "$ref": "../schemas/EvidenceItem.schema.json"
+      },
+      "EvidenceLink": {
+        "$ref": "../schemas/EvidenceLink.schema.json"
+      },
+      "HypothesisSpec": {
+        "$ref": "../schemas/HypothesisSpec.schema.json"
+      },
+      "ImplementationSpec": {
+        "$ref": "../schemas/ImplementationSpec.schema.json"
+      },
+      "ModelSpec": {
+        "$ref": "../schemas/ModelSpec.schema.json"
+      },
+      "ProtocolSpec": {
+        "$ref": "../schemas/ProtocolSpec.schema.json"
+      },
+      "ResolutionSpec": {
+        "$ref": "../schemas/ResolutionSpec.schema.json"
+      },
+      "ScopeSpec": {
+        "$ref": "../schemas/ScopeSpec.schema.json"
+      },
+      "SourceSpec": {
+        "$ref": "../schemas/SourceSpec.schema.json"
+      },
+      "TemporalRelation": {
+        "$ref": "../schemas/TemporalRelation.schema.json"
+      },
+      "TestSpec": {
+        "$ref": "../schemas/TestSpec.schema.json"
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "Same-origin, workspace-level bearer RBAC. Read role is inherited by analyst/reviewer/release; admin permits all. Runtime validates semantic references beyond shape schemas.",
+    "title": "FCEA Research Local API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/healthz": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "security": [],
+        "summary": "Public process liveness only",
+        "x-required-role": "public"
+      }
+    },
+    "/v1/adapters": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Versioned methods, parameter allowlists and limitations",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/audit": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Immutable audit events",
+        "x-required-role": "reviewer or release"
+      }
+    },
+    "/v1/claims": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimSpec"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Register ClaimSpec",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/claims/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Read immutable claims record",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/claims/{id}/proof": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Inspect claim runs and packet records",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/demos": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Import a synthetic example",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/evidence": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvidenceItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Extract evidence; server supplies or verifies value",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/evidence/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Read immutable evidence record",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/examples": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Built-in synthetic example names",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/graphs": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Four graph projections with cross-graph references",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Workspace health and counts",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/identity": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Authenticated identity and roles",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/import": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Idempotent bundle import; writes are per-object transactional",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/models": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelSpec"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Register ModelSpec",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/models/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Read immutable models record",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/objects": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "kind",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "List objects with limit and offset",
+        "x-required-role": "reader"
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "payload"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Register typed input; execution-managed records forbidden",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/proofs/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Download ZIP bytes",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/protocols": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProtocolSpec"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Register ProtocolSpec",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/protocols/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Read immutable protocols record",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/protocols/{id}/freeze": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Freeze exact inputs",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/releases": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "public": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "run_ref": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "run_ref"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Authenticate release after gates, integrity and independent review",
+        "x-required-role": "release"
+      }
+    },
+    "/v1/releases/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Read immutable releases record",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/reviews/{id}": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "APPROVE",
+                      "DOWNGRADE",
+                      "REJECT",
+                      "RERUN_REQUIRED"
+                    ]
+                  },
+                  "conflict_of_interest": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Review exact run or contradiction link",
+        "x-required-role": "reviewer"
+      }
+    },
+    "/v1/runs": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "protocol_ref": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "protocol_ref"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Execute frozen protocol; at most two concurrent runs",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/runs/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Read immutable runs record",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/runs/{id}/proof": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "public": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Create proof packet record",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/schemas": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "All runtime-generated JSON schemas",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Search immutable objects",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/sources": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "content_base64": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "metadata",
+                  "content_base64"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Acquire base64 bytes; hash and acquired_at assigned by service",
+        "x-required-role": "analyst"
+      }
+    },
+    "/v1/sources/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Read immutable sources record",
+        "x-required-role": "reader"
+      }
+    },
+    "/v1/verify": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Success; scientific state is in the result"
+          },
+          "401": {
+            "description": "Credentials missing"
+          },
+          "403": {
+            "description": "Role, token, Host or Origin rejected"
+          },
+          "404": {
+            "description": "Object or route absent"
+          },
+          "409": {
+            "description": "Immutable conflict or run capacity"
+          },
+          "422": {
+            "description": "Invalid input/integrity failure"
+          },
+          "500": {
+            "description": "Unexpected error; no success issued"
+          }
+        },
+        "summary": "Verify database, raw store and audit chain",
+        "x-required-role": "analyst"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearer": []
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000"
+    }
+  ]
+}

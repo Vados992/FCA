@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "alpha": {
+      "type": "number"
+    },
+    "claim_ref": {
+      "type": "string"
+    },
+    "counterfactual_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "cutoff": {
+      "type": "string"
+    },
+    "dataset_ref": {
+      "type": "string"
+    },
+    "edge_from_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "edge_to_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "minimum_independent_clusters": {
+      "type": "integer"
+    },
+    "mode": {
+      "enum": [
+        "confirmatory",
+        "exploratory"
+      ],
+      "type": "string"
+    },
+    "multiplicity": {
+      "enum": [
+        "none",
+        "holm",
+        "benjamini_hochberg"
+      ],
+      "type": "string"
+    },
+    "parameters": {
+      "additionalProperties": {},
+      "type": "object"
+    },
+    "registration": {
+      "enum": [
+        "retrospective",
+        "prospective"
+      ],
+      "type": "string"
+    },
+    "reproduction_atol": {
+      "type": "number"
+    },
+    "reproduction_rtol": {
+      "type": "number"
+    },
+    "required_gates": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "required_reviewers": {
+      "type": "integer"
+    },
+    "research_question": {
+      "type": "string"
+    },
+    "robustness_sign_required": {
+      "type": "boolean"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "temporal_relation_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "test_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "research_question",
+    "claim_ref",
+    "dataset_ref",
+    "cutoff",
+    "parameters",
+    "seed",
+    "counterfactual_refs",
+    "test_refs"
+  ],
+  "title": "ProtocolSpec",
+  "type": "object"
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "from_ref": {
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "relation": {
+      "enum": [
+        "precedes",
+        "overlaps",
+        "contains",
+        "uncertain_order"
+      ],
+      "type": "string"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "to_ref": {
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "from_ref",
+    "to_ref",
+    "relation"
+  ],
+  "title": "TemporalRelation",
+  "type": "object"
+}

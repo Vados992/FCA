@@ -1,0 +1,633 @@
+{
+  "description": "SYNTHETIC; no empirical validation claim.",
+  "expected": {
+    "all_gates": "PASS",
+    "scientific_state": "SUPPORTED",
+    "validity_state": "VALID"
+  },
+  "protocol_ref": "science.protocol",
+  "records": [
+    {
+      "kind": "ScopeSpec",
+      "payload": {
+        "assumptions": [
+          "measurement_validity"
+        ],
+        "domains": [
+          "science"
+        ],
+        "end": "2026-01-01T00:00:00Z",
+        "id": "science.scope",
+        "model_families": [
+          "science.prediction_check"
+        ],
+        "populations": [
+          "synthetic-science"
+        ],
+        "precision": "synthetic-units-v1",
+        "regimes": [
+          "synthetic"
+        ],
+        "start": "2025-01-01T00:00:00Z"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "science.data",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "science.scope",
+        "selector": "/data",
+        "source_ref": "science.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "science.negative",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "science.scope",
+        "selector": "/negative_control",
+        "source_ref": "science.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "science.design",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "science.scope",
+        "selector": "/design",
+        "source_ref": "science.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "science.design"
+        ],
+        "id": "science.assumption.measurement_validity",
+        "key": "measurement_validity",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "measurement validity",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "ImplementationSpec",
+      "payload": {
+        "adapter_id": "science",
+        "adapter_version": "1.0.0",
+        "core_version": "1.0.0",
+        "id": "science.implementation",
+        "method": "prediction_check"
+      }
+    },
+    {
+      "kind": "ModelSpec",
+      "payload": {
+        "assumption_refs": [
+          "science.assumption.measurement_validity"
+        ],
+        "causal_graph": {},
+        "equations": "See docs/METHODS.md and the pinned implementation.",
+        "estimand": null,
+        "family": "science.prediction_check",
+        "id": "science.model",
+        "implementation_ref": "science.implementation",
+        "scope_ref": "science.scope"
+      }
+    },
+    {
+      "kind": "TestSpec",
+      "payload": {
+        "accept": "abs_lte",
+        "column": "zero",
+        "evidence_ref": "science.negative",
+        "id": "science.test.negative",
+        "kind": "negative_control",
+        "metric": "max_abs",
+        "target": "model",
+        "threshold": 1e-09
+      }
+    },
+    {
+      "kind": "HypothesisSpec",
+      "payload": {
+        "alternatives": [
+          "Generator/model mismatch",
+          "Measurement or selection error",
+          "Counterfactual sensitivity"
+        ],
+        "falsification_tests": [
+          "science.test.negative"
+        ],
+        "id": "science.hypothesis",
+        "null": "No effect or incompatibility under the specified operational metric.",
+        "proposition": "The frozen operational test passes in the synthetic scope."
+      }
+    },
+    {
+      "kind": "ClaimSpec",
+      "payload": {
+        "claim_type": "MODEL_COMPATIBILITY",
+        "hypothesis_ref": "science.hypothesis",
+        "id": "science.claim",
+        "mandatory_dependencies": [
+          "science.data"
+        ],
+        "model_ref": "science.model",
+        "proposition": "Synthetic science benchmark meets its declared operational criterion.",
+        "scope_ref": "science.scope"
+      }
+    },
+    {
+      "kind": "EvidenceLink",
+      "payload": {
+        "claim_ref": "science.claim",
+        "evidence_ref": "science.data",
+        "id": "science.support",
+        "role": "supports"
+      }
+    },
+    {
+      "kind": "CounterfactualSpec",
+      "payload": {
+        "changes": {
+          "prediction_offset": 0.01
+        },
+        "description": "Preregistered alternative parameter scenario for this synthetic benchmark.",
+        "evidence_refs": [
+          "science.design"
+        ],
+        "id": "science.counterfactual"
+      }
+    },
+    {
+      "kind": "ProtocolSpec",
+      "payload": {
+        "claim_ref": "science.claim",
+        "counterfactual_refs": [
+          "science.counterfactual"
+        ],
+        "cutoff": "2026-01-01T00:00:00Z",
+        "dataset_ref": "science.data",
+        "id": "science.protocol",
+        "parameters": {
+          "max_standardized_residual": 4,
+          "prediction_offset": 0.0
+        },
+        "registration": "retrospective",
+        "research_question": "Reproduce the science synthetic operational test.",
+        "robustness_sign_required": false,
+        "seed": 3819,
+        "test_refs": [
+          "science.test.negative"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "content": {
+        "data": [
+          {
+            "id": "row-0",
+            "observed": 1.0204507152116602,
+            "predicted": 1.0,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-1",
+            "observed": 1.1076592072833815,
+            "predicted": 1.1,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-2",
+            "observed": 1.1986134429993756,
+            "predicted": 1.2,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-3",
+            "observed": 1.2999686551896896,
+            "predicted": 1.3,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-4",
+            "observed": 1.413026997863511,
+            "predicted": 1.4,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-5",
+            "observed": 1.4934538414994654,
+            "predicted": 1.5,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-6",
+            "observed": 1.6002117790613752,
+            "predicted": 1.6,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-7",
+            "observed": 1.7104337863009555,
+            "predicted": 1.7,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-8",
+            "observed": 1.8068355949172348,
+            "predicted": 1.8,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-9",
+            "observed": 1.889413790017368,
+            "predicted": 1.9,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-10",
+            "observed": 1.9909162234276345,
+            "predicted": 2.0,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-11",
+            "observed": 2.1240706771911078,
+            "predicted": 2.1,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-12",
+            "observed": 2.2006218690458286,
+            "predicted": 2.2,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-13",
+            "observed": 2.2904170038338876,
+            "predicted": 2.3,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-14",
+            "observed": 2.39622037275481,
+            "predicted": 2.4,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-15",
+            "observed": 2.4803886990456734,
+            "predicted": 2.5,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-16",
+            "observed": 2.5964407860095955,
+            "predicted": 2.6,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-17",
+            "observed": 2.70452207155928,
+            "predicted": 2.7,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-18",
+            "observed": 2.7775072233998763,
+            "predicted": 2.8,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-19",
+            "observed": 2.8967489356556153,
+            "predicted": 2.9,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-20",
+            "observed": 2.995870990236896,
+            "predicted": 3.0,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-21",
+            "observed": 3.096941330585178,
+            "predicted": 3.1,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-22",
+            "observed": 3.190976417004492,
+            "predicted": 3.2,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-23",
+            "observed": 3.305530890914404,
+            "predicted": 3.3,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-24",
+            "observed": 3.3931149910606653,
+            "predicted": 3.4,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-25",
+            "observed": 3.5182128737462404,
+            "predicted": 3.5,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-26",
+            "observed": 3.6083874415315744,
+            "predicted": 3.6,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-27",
+            "observed": 3.7082352865434083,
+            "predicted": 3.7,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-28",
+            "observed": 3.792228538924488,
+            "predicted": 3.8,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-29",
+            "observed": 3.909787952181632,
+            "predicted": 3.9,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-30",
+            "observed": 4.002508357508841,
+            "predicted": 4.0,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-31",
+            "observed": 4.09979482688175,
+            "predicted": 4.1,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-32",
+            "observed": 4.183868297661911,
+            "predicted": 4.2,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-33",
+            "observed": 4.275748990863412,
+            "predicted": 4.3,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-34",
+            "observed": 4.41713644295947,
+            "predicted": 4.4,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-35",
+            "observed": 4.493866942245545,
+            "predicted": 4.5,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-36",
+            "observed": 4.598873765744892,
+            "predicted": 4.6,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-37",
+            "observed": 4.6962367988124045,
+            "predicted": 4.7,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-38",
+            "observed": 4.783334717919212,
+            "predicted": 4.8,
+            "sigma": 0.05
+          },
+          {
+            "id": "row-39",
+            "observed": 4.901262502942143,
+            "predicted": 4.9,
+            "sigma": 0.05
+          }
+        ],
+        "design": [
+          {
+            "assumptions": [
+              "measurement_validity"
+            ],
+            "generator": "fcea.examples.builders.v1",
+            "id": "design",
+            "note": "Declared properties of the synthetic generator, not empirical certificates.",
+            "seed": 9281,
+            "synthetic": true
+          }
+        ],
+        "negative_control": [
+          {
+            "id": "nc-0",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-1",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-2",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-3",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-4",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-5",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-6",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-7",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-8",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-9",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-10",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-11",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-12",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-13",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-14",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-15",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-16",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-17",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-18",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-19",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-20",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-21",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-22",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-23",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-24",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-25",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-26",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-27",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-28",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-29",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-30",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-31",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-32",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-33",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-34",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-35",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-36",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-37",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-38",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-39",
+            "zero": 0.0
+          }
+        ]
+      },
+      "metadata": {
+        "dependency_keys": [
+          "fcea-synthetic-generator-seed-9281"
+        ],
+        "id": "science.source",
+        "known_at": "2025-12-31T00:00:00Z",
+        "legal_basis": "Author-generated synthetic benchmark data",
+        "media_type": "application/json",
+        "origin": "synthetic://fcea/science",
+        "redistributable": true,
+        "synthetic": true
+      }
+    }
+  ]
+}

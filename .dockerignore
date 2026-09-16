@@ -1,0 +1,14 @@
+.git
+__pycache__
+**/__pycache__
+*.pyc
+.venv
+var
+validation-output
+dist
+build
+*.egg-info
+*.key
+*.pem
+.env
+auth.json

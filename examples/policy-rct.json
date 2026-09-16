@@ -1,0 +1,995 @@
+{
+  "description": "SYNTHETIC; no empirical validation claim.",
+  "expected": {
+    "all_gates": "PASS",
+    "scientific_state": "SUPPORTED",
+    "validity_state": "VALID"
+  },
+  "protocol_ref": "policy_rct.protocol",
+  "records": [
+    {
+      "kind": "ScopeSpec",
+      "payload": {
+        "assumptions": [
+          "random_assignment",
+          "consistency",
+          "no_interference"
+        ],
+        "domains": [
+          "policy"
+        ],
+        "end": "2026-01-01T00:00:00Z",
+        "id": "policy_rct.scope",
+        "model_families": [
+          "policy.rct"
+        ],
+        "populations": [
+          "synthetic-policy-rct"
+        ],
+        "precision": "synthetic-units-v1",
+        "regimes": [
+          "synthetic"
+        ],
+        "start": "2025-01-01T00:00:00Z"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "policy_rct.data",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "policy_rct.scope",
+        "selector": "/data",
+        "source_ref": "policy_rct.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "policy_rct.negative",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "policy_rct.scope",
+        "selector": "/negative_control",
+        "source_ref": "policy_rct.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "policy_rct.design",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "policy_rct.scope",
+        "selector": "/design",
+        "source_ref": "policy_rct.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": true,
+        "evidence_refs": [
+          "policy_rct.design"
+        ],
+        "id": "policy_rct.assumption.random_assignment",
+        "key": "random_assignment",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "random assignment",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": true,
+        "evidence_refs": [
+          "policy_rct.design"
+        ],
+        "id": "policy_rct.assumption.consistency",
+        "key": "consistency",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "consistency",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": true,
+        "evidence_refs": [
+          "policy_rct.design"
+        ],
+        "id": "policy_rct.assumption.no_interference",
+        "key": "no_interference",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "no interference",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "ImplementationSpec",
+      "payload": {
+        "adapter_id": "policy",
+        "adapter_version": "1.0.0",
+        "core_version": "1.0.0",
+        "id": "policy_rct.implementation",
+        "method": "rct"
+      }
+    },
+    {
+      "kind": "ModelSpec",
+      "payload": {
+        "assumption_refs": [
+          "policy_rct.assumption.random_assignment",
+          "policy_rct.assumption.consistency",
+          "policy_rct.assumption.no_interference"
+        ],
+        "causal_graph": {
+          "treatment": [],
+          "y": [
+            "treatment"
+          ]
+        },
+        "equations": "See docs/METHODS.md and the pinned implementation.",
+        "estimand": "ATE",
+        "family": "policy.rct",
+        "id": "policy_rct.model",
+        "implementation_ref": "policy_rct.implementation",
+        "scope_ref": "policy_rct.scope"
+      }
+    },
+    {
+      "kind": "TestSpec",
+      "payload": {
+        "accept": "abs_lte",
+        "column": "zero",
+        "evidence_ref": "policy_rct.negative",
+        "id": "policy_rct.test.negative",
+        "kind": "negative_control",
+        "metric": "max_abs",
+        "target": "model",
+        "threshold": 1e-09
+      }
+    },
+    {
+      "kind": "HypothesisSpec",
+      "payload": {
+        "alternatives": [
+          "Generator/model mismatch",
+          "Measurement or selection error",
+          "Counterfactual sensitivity"
+        ],
+        "falsification_tests": [
+          "policy_rct.test.negative"
+        ],
+        "id": "policy_rct.hypothesis",
+        "null": "No effect or incompatibility under the specified operational metric.",
+        "proposition": "The frozen operational test passes in the synthetic scope."
+      }
+    },
+    {
+      "kind": "ClaimSpec",
+      "payload": {
+        "claim_type": "CAUSAL_EFFECT",
+        "hypothesis_ref": "policy_rct.hypothesis",
+        "id": "policy_rct.claim",
+        "mandatory_dependencies": [
+          "policy_rct.data"
+        ],
+        "model_ref": "policy_rct.model",
+        "proposition": "Synthetic policy-rct benchmark meets its declared operational criterion.",
+        "scope_ref": "policy_rct.scope"
+      }
+    },
+    {
+      "kind": "EvidenceLink",
+      "payload": {
+        "claim_ref": "policy_rct.claim",
+        "evidence_ref": "policy_rct.data",
+        "id": "policy_rct.support",
+        "role": "supports"
+      }
+    },
+    {
+      "kind": "CounterfactualSpec",
+      "payload": {
+        "changes": {
+          "bias_offset": 0.1
+        },
+        "description": "Preregistered alternative parameter scenario for this synthetic benchmark.",
+        "evidence_refs": [
+          "policy_rct.design"
+        ],
+        "id": "policy_rct.counterfactual"
+      }
+    },
+    {
+      "kind": "ProtocolSpec",
+      "payload": {
+        "claim_ref": "policy_rct.claim",
+        "counterfactual_refs": [
+          "policy_rct.counterfactual"
+        ],
+        "cutoff": "2026-01-01T00:00:00Z",
+        "dataset_ref": "policy_rct.data",
+        "id": "policy_rct.protocol",
+        "parameters": {
+          "alpha": 0.05,
+          "bias_offset": 0.0,
+          "bootstrap_samples": 200,
+          "direction": "positive",
+          "effect_threshold": 0.2
+        },
+        "registration": "retrospective",
+        "research_question": "Reproduce the policy-rct synthetic operational test.",
+        "robustness_sign_required": true,
+        "seed": 3819,
+        "test_refs": [
+          "policy_rct.test.negative"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "content": {
+        "data": [
+          {
+            "id": "row-0",
+            "pre": 4.255676925429932,
+            "pre_previous": 3.2578780490492933,
+            "treatment": 0,
+            "y": 5.478454264277539
+          },
+          {
+            "id": "row-1",
+            "pre": 3.6391411809298284,
+            "pre_previous": 2.650803705173252,
+            "treatment": 1,
+            "y": 6.6072430774780715
+          },
+          {
+            "id": "row-2",
+            "pre": 2.9816783019411255,
+            "pre_previous": 1.9607159284478337,
+            "treatment": 1,
+            "y": 6.160436838814103
+          },
+          {
+            "id": "row-3",
+            "pre": 4.0126876809248,
+            "pre_previous": 3.0026959310024517,
+            "treatment": 0,
+            "y": 4.714116498509702
+          },
+          {
+            "id": "row-4",
+            "pre": 4.472286753053177,
+            "pre_previous": 3.4707991051537563,
+            "treatment": 0,
+            "y": 5.3665754633895455
+          },
+          {
+            "id": "row-5",
+            "pre": 4.690396578264039,
+            "pre_previous": 3.6953845052834207,
+            "treatment": 0,
+            "y": 5.608831580151647
+          },
+          {
+            "id": "row-6",
+            "pre": 3.6957686998477417,
+            "pre_previous": 2.7006057441417024,
+            "treatment": 1,
+            "y": 6.590300579170151
+          },
+          {
+            "id": "row-7",
+            "pre": 4.07419492579071,
+            "pre_previous": 3.0805400843872994,
+            "treatment": 1,
+            "y": 7.345911389511112
+          },
+          {
+            "id": "row-8",
+            "pre": 3.1955353172661543,
+            "pre_previous": 2.225365757101707,
+            "treatment": 0,
+            "y": 4.196625570991842
+          },
+          {
+            "id": "row-9",
+            "pre": 4.508239442626534,
+            "pre_previous": 3.512272570735707,
+            "treatment": 0,
+            "y": 5.356958747893437
+          },
+          {
+            "id": "row-10",
+            "pre": 4.823912867094992,
+            "pre_previous": 3.8212300304810753,
+            "treatment": 1,
+            "y": 7.9309991507448885
+          },
+          {
+            "id": "row-11",
+            "pre": 4.3420429157810885,
+            "pre_previous": 3.3840324552632666,
+            "treatment": 1,
+            "y": 7.3046729122666445
+          },
+          {
+            "id": "row-12",
+            "pre": 4.485441679202848,
+            "pre_previous": 3.456539846869862,
+            "treatment": 1,
+            "y": 7.461248227279302
+          },
+          {
+            "id": "row-13",
+            "pre": 3.885814836976876,
+            "pre_previous": 2.8502528792168,
+            "treatment": 0,
+            "y": 4.9917127577816185
+          },
+          {
+            "id": "row-14",
+            "pre": 4.143787474655339,
+            "pre_previous": 3.1297530005582788,
+            "treatment": 0,
+            "y": 5.004501447521617
+          },
+          {
+            "id": "row-15",
+            "pre": 4.455637611709201,
+            "pre_previous": 3.4414707650367293,
+            "treatment": 0,
+            "y": 5.749010976504633
+          },
+          {
+            "id": "row-16",
+            "pre": 3.656183389764266,
+            "pre_previous": 2.6434851830076735,
+            "treatment": 0,
+            "y": 4.049659313183489
+          },
+          {
+            "id": "row-17",
+            "pre": 3.918244513505965,
+            "pre_previous": 2.956254739374357,
+            "treatment": 1,
+            "y": 6.911951612940713
+          },
+          {
+            "id": "row-18",
+            "pre": 5.243787042008398,
+            "pre_previous": 4.253059527760046,
+            "treatment": 1,
+            "y": 7.454402078318815
+          },
+          {
+            "id": "row-19",
+            "pre": 3.3836929575399264,
+            "pre_previous": 2.3587887842671695,
+            "treatment": 0,
+            "y": 4.666034443049115
+          },
+          {
+            "id": "row-20",
+            "pre": 2.681485618988593,
+            "pre_previous": 1.6653962346050466,
+            "treatment": 1,
+            "y": 5.904188451177656
+          },
+          {
+            "id": "row-21",
+            "pre": 4.122117494622482,
+            "pre_previous": 3.125366076229996,
+            "treatment": 1,
+            "y": 7.418658833796695
+          },
+          {
+            "id": "row-22",
+            "pre": 3.4406043736522234,
+            "pre_previous": 2.4610372846191497,
+            "treatment": 0,
+            "y": 5.170370811126531
+          },
+          {
+            "id": "row-23",
+            "pre": 3.2888504875386824,
+            "pre_previous": 2.320508830183079,
+            "treatment": 0,
+            "y": 4.92574526373883
+          },
+          {
+            "id": "row-24",
+            "pre": 4.110689281697902,
+            "pre_previous": 3.0932731997054344,
+            "treatment": 0,
+            "y": 5.439442552731127
+          },
+          {
+            "id": "row-25",
+            "pre": 4.649488733465333,
+            "pre_previous": 3.638364662010074,
+            "treatment": 0,
+            "y": 5.398861767885777
+          },
+          {
+            "id": "row-26",
+            "pre": 2.613853405260622,
+            "pre_previous": 1.6267936448846199,
+            "treatment": 0,
+            "y": 3.5449436845070754
+          },
+          {
+            "id": "row-27",
+            "pre": 3.0952900884515175,
+            "pre_previous": 2.0652409214437917,
+            "treatment": 1,
+            "y": 6.047462408968209
+          },
+          {
+            "id": "row-28",
+            "pre": 3.099931188696555,
+            "pre_previous": 2.1290890615020484,
+            "treatment": 0,
+            "y": 3.904234617310458
+          },
+          {
+            "id": "row-29",
+            "pre": 4.798886720357782,
+            "pre_previous": 3.803065441962067,
+            "treatment": 1,
+            "y": 7.822772176404894
+          },
+          {
+            "id": "row-30",
+            "pre": 3.993137982156059,
+            "pre_previous": 2.973088286086675,
+            "treatment": 0,
+            "y": 5.214877581442731
+          },
+          {
+            "id": "row-31",
+            "pre": 4.029919297092151,
+            "pre_previous": 3.0330623377850645,
+            "treatment": 1,
+            "y": 6.821500235048043
+          },
+          {
+            "id": "row-32",
+            "pre": 3.562085813112381,
+            "pre_previous": 2.608407354267339,
+            "treatment": 1,
+            "y": 6.366088831119465
+          },
+          {
+            "id": "row-33",
+            "pre": 3.7999530609471983,
+            "pre_previous": 2.7781702682498035,
+            "treatment": 0,
+            "y": 4.682435249637469
+          },
+          {
+            "id": "row-34",
+            "pre": 4.632024235034641,
+            "pre_previous": 3.592334208674611,
+            "treatment": 0,
+            "y": 5.596665893136746
+          },
+          {
+            "id": "row-35",
+            "pre": 4.032302771791074,
+            "pre_previous": 3.0112983015307417,
+            "treatment": 0,
+            "y": 4.915133333559702
+          },
+          {
+            "id": "row-36",
+            "pre": 5.658797072747561,
+            "pre_previous": 4.632345694383305,
+            "treatment": 1,
+            "y": 9.044618087559124
+          },
+          {
+            "id": "row-37",
+            "pre": 4.2808421464150435,
+            "pre_previous": 3.27224331729576,
+            "treatment": 1,
+            "y": 7.130548412339413
+          },
+          {
+            "id": "row-38",
+            "pre": 4.051528249529432,
+            "pre_previous": 3.0831064215619994,
+            "treatment": 1,
+            "y": 6.739874138283334
+          },
+          {
+            "id": "row-39",
+            "pre": 4.129161390324346,
+            "pre_previous": 3.1026852391592183,
+            "treatment": 1,
+            "y": 6.825636772990882
+          },
+          {
+            "id": "row-40",
+            "pre": 3.9647412458931983,
+            "pre_previous": 2.987476428709723,
+            "treatment": 0,
+            "y": 5.293452905981042
+          },
+          {
+            "id": "row-41",
+            "pre": 3.5245878214022333,
+            "pre_previous": 2.530991312582499,
+            "treatment": 1,
+            "y": 6.790700151099175
+          },
+          {
+            "id": "row-42",
+            "pre": 5.433284416220786,
+            "pre_previous": 4.457492968414361,
+            "treatment": 0,
+            "y": 6.604740119637206
+          },
+          {
+            "id": "row-43",
+            "pre": 3.7485736634383806,
+            "pre_previous": 2.7873555022950987,
+            "treatment": 0,
+            "y": 4.765725814820983
+          },
+          {
+            "id": "row-44",
+            "pre": 4.239498648532874,
+            "pre_previous": 3.2369112744137065,
+            "treatment": 0,
+            "y": 4.803997287586021
+          },
+          {
+            "id": "row-45",
+            "pre": 3.6410432294560664,
+            "pre_previous": 2.6653231764163907,
+            "treatment": 1,
+            "y": 6.935081350061301
+          },
+          {
+            "id": "row-46",
+            "pre": 4.536377032803588,
+            "pre_previous": 3.532555620122566,
+            "treatment": 1,
+            "y": 7.962185789395734
+          },
+          {
+            "id": "row-47",
+            "pre": 3.094253502567504,
+            "pre_previous": 2.085048974361508,
+            "treatment": 1,
+            "y": 6.287534802956244
+          },
+          {
+            "id": "row-48",
+            "pre": 4.64921723828907,
+            "pre_previous": 3.646958056046134,
+            "treatment": 0,
+            "y": 5.51615890071566
+          },
+          {
+            "id": "row-49",
+            "pre": 3.3475991322049197,
+            "pre_previous": 2.3975293681007117,
+            "treatment": 1,
+            "y": 6.248639621292058
+          },
+          {
+            "id": "row-50",
+            "pre": 3.982254863577884,
+            "pre_previous": 2.9892328235306853,
+            "treatment": 1,
+            "y": 7.3028115916263525
+          },
+          {
+            "id": "row-51",
+            "pre": 3.6267109430401074,
+            "pre_previous": 2.637362308872203,
+            "treatment": 0,
+            "y": 4.643262878505599
+          },
+          {
+            "id": "row-52",
+            "pre": 4.866980600359488,
+            "pre_previous": 3.8676189572818784,
+            "treatment": 1,
+            "y": 7.8833636371167195
+          },
+          {
+            "id": "row-53",
+            "pre": 4.085725731275193,
+            "pre_previous": 3.0569730545942715,
+            "treatment": 1,
+            "y": 7.4305513971768375
+          },
+          {
+            "id": "row-54",
+            "pre": 4.56532529396477,
+            "pre_previous": 3.5913173431310366,
+            "treatment": 0,
+            "y": 5.562459813245948
+          },
+          {
+            "id": "row-55",
+            "pre": 4.328626453227568,
+            "pre_previous": 3.325324333014353,
+            "treatment": 0,
+            "y": 5.4309324917632384
+          },
+          {
+            "id": "row-56",
+            "pre": 3.7509917167541484,
+            "pre_previous": 2.7435354410927975,
+            "treatment": 0,
+            "y": 4.217975129985523
+          },
+          {
+            "id": "row-57",
+            "pre": 3.9406575702240003,
+            "pre_previous": 2.92076711742142,
+            "treatment": 1,
+            "y": 6.781774111709606
+          },
+          {
+            "id": "row-58",
+            "pre": 5.077358904104807,
+            "pre_previous": 4.073523598579723,
+            "treatment": 1,
+            "y": 8.791868491180521
+          },
+          {
+            "id": "row-59",
+            "pre": 4.314725396497475,
+            "pre_previous": 3.310768728665147,
+            "treatment": 0,
+            "y": 5.869586708178213
+          },
+          {
+            "id": "row-60",
+            "pre": 4.055921155090419,
+            "pre_previous": 3.014736152795713,
+            "treatment": 1,
+            "y": 7.35081397699406
+          },
+          {
+            "id": "row-61",
+            "pre": 3.867570278136331,
+            "pre_previous": 2.8598020611489674,
+            "treatment": 0,
+            "y": 4.906624815159797
+          },
+          {
+            "id": "row-62",
+            "pre": 3.725352034745195,
+            "pre_previous": 2.70208259488368,
+            "treatment": 1,
+            "y": 6.57666990434986
+          },
+          {
+            "id": "row-63",
+            "pre": 3.6813051600649107,
+            "pre_previous": 2.690613197161231,
+            "treatment": 1,
+            "y": 6.521560667001425
+          },
+          {
+            "id": "row-64",
+            "pre": 3.6908648176792234,
+            "pre_previous": 2.6928135606319223,
+            "treatment": 0,
+            "y": 4.7821369114481245
+          },
+          {
+            "id": "row-65",
+            "pre": 4.054608401678866,
+            "pre_previous": 3.050396838705258,
+            "treatment": 1,
+            "y": 6.811288051537102
+          },
+          {
+            "id": "row-66",
+            "pre": 3.6211663205656803,
+            "pre_previous": 2.6271265129800194,
+            "treatment": 0,
+            "y": 4.413047712837889
+          },
+          {
+            "id": "row-67",
+            "pre": 4.189858529256096,
+            "pre_previous": 3.228850049770784,
+            "treatment": 0,
+            "y": 5.158687716613946
+          },
+          {
+            "id": "row-68",
+            "pre": 4.646582855573075,
+            "pre_previous": 3.6730472052834746,
+            "treatment": 1,
+            "y": 7.468584623272244
+          },
+          {
+            "id": "row-69",
+            "pre": 4.316710948514909,
+            "pre_previous": 3.329333146799967,
+            "treatment": 0,
+            "y": 5.73198675691186
+          },
+          {
+            "id": "row-70",
+            "pre": 4.395607294636213,
+            "pre_previous": 3.409156880966372,
+            "treatment": 0,
+            "y": 5.421473932367134
+          },
+          {
+            "id": "row-71",
+            "pre": 2.950329428233955,
+            "pre_previous": 1.9827332373258737,
+            "treatment": 0,
+            "y": 3.9679696203090966
+          },
+          {
+            "id": "row-72",
+            "pre": 4.427222507857099,
+            "pre_previous": 3.4326085079017274,
+            "treatment": 1,
+            "y": 7.470594715056625
+          },
+          {
+            "id": "row-73",
+            "pre": 4.845245726436243,
+            "pre_previous": 3.852140395423777,
+            "treatment": 1,
+            "y": 7.879463585214768
+          },
+          {
+            "id": "row-74",
+            "pre": 3.9572021340488943,
+            "pre_previous": 2.9438724464817527,
+            "treatment": 0,
+            "y": 5.745010588346848
+          },
+          {
+            "id": "row-75",
+            "pre": 4.38185256161066,
+            "pre_previous": 3.3831243998002485,
+            "treatment": 1,
+            "y": 7.114891512661639
+          },
+          {
+            "id": "row-76",
+            "pre": 3.6743067794187594,
+            "pre_previous": 2.655529096340544,
+            "treatment": 1,
+            "y": 5.977608543892863
+          },
+          {
+            "id": "row-77",
+            "pre": 4.36294765071577,
+            "pre_previous": 3.3746630397024124,
+            "treatment": 0,
+            "y": 5.913074948388108
+          },
+          {
+            "id": "row-78",
+            "pre": 5.379244463789654,
+            "pre_previous": 4.385503589374614,
+            "treatment": 1,
+            "y": 8.755412075297677
+          },
+          {
+            "id": "row-79",
+            "pre": 3.888970327806519,
+            "pre_previous": 2.89106473519199,
+            "treatment": 1,
+            "y": 6.742699174692834
+          }
+        ],
+        "design": [
+          {
+            "assumptions": [
+              "random_assignment",
+              "consistency",
+              "no_interference"
+            ],
+            "generator": "fcea.examples.builders.v1",
+            "id": "design",
+            "note": "Declared properties of the synthetic generator, not empirical certificates.",
+            "seed": 9281,
+            "synthetic": true
+          }
+        ],
+        "negative_control": [
+          {
+            "id": "nc-0",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-1",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-2",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-3",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-4",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-5",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-6",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-7",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-8",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-9",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-10",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-11",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-12",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-13",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-14",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-15",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-16",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-17",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-18",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-19",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-20",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-21",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-22",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-23",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-24",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-25",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-26",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-27",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-28",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-29",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-30",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-31",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-32",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-33",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-34",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-35",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-36",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-37",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-38",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-39",
+            "zero": 0.0
+          }
+        ]
+      },
+      "metadata": {
+        "dependency_keys": [
+          "fcea-synthetic-generator-seed-9281"
+        ],
+        "id": "policy_rct.source",
+        "known_at": "2025-12-31T00:00:00Z",
+        "legal_basis": "Author-generated synthetic benchmark data",
+        "media_type": "application/json",
+        "origin": "synthetic://fcea/policy-rct",
+        "redistributable": true,
+        "synthetic": true
+      }
+    }
+  ]
+}

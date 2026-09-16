@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acquired_at": {
+      "type": "string"
+    },
+    "dependency_keys": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "known_at": {
+      "type": "string"
+    },
+    "legal_basis": {
+      "type": "string"
+    },
+    "media_type": {
+      "enum": [
+        "application/json",
+        "text/csv",
+        "text/plain",
+        "application/octet-stream"
+      ],
+      "type": "string"
+    },
+    "origin": {
+      "type": "string"
+    },
+    "parent_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "redistributable": {
+      "type": "boolean"
+    },
+    "sha256": {
+      "type": "string"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "origin",
+    "known_at",
+    "legal_basis",
+    "sha256",
+    "media_type",
+    "acquired_at"
+  ],
+  "title": "SourceSpec",
+  "type": "object"
+}

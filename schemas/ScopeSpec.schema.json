@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "domains": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "end": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "model_families": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "populations": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "precision": {
+      "type": "string"
+    },
+    "regimes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "start": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "domains",
+    "populations",
+    "regimes",
+    "model_families",
+    "precision"
+  ],
+  "title": "ScopeSpec",
+  "type": "object"
+}

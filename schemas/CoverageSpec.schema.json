@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "justification_ref": {
+      "type": "string"
+    },
+    "key_column": {
+      "type": "string"
+    },
+    "observations_ref": {
+      "type": "string"
+    },
+    "scope_ref": {
+      "type": "string"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "universe": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "witness_column": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "scope_ref",
+    "universe",
+    "observations_ref",
+    "key_column",
+    "witness_column",
+    "justification_ref"
+  ],
+  "title": "CoverageSpec",
+  "type": "object"
+}

@@ -1,0 +1,751 @@
+{
+  "description": "SYNTHETIC; no empirical validation claim.",
+  "expected": {
+    "all_gates": "PASS",
+    "scientific_state": "SUPPORTED",
+    "validity_state": "VALID"
+  },
+  "protocol_ref": "market.protocol",
+  "records": [
+    {
+      "kind": "ScopeSpec",
+      "payload": {
+        "assumptions": [
+          "point_in_time_universe",
+          "survivorship_control",
+          "capacity_assessment"
+        ],
+        "domains": [
+          "market"
+        ],
+        "end": "2026-01-01T00:00:00Z",
+        "id": "market.scope",
+        "model_families": [
+          "market.backtest"
+        ],
+        "populations": [
+          "synthetic-market"
+        ],
+        "precision": "synthetic-units-v1",
+        "regimes": [
+          "synthetic"
+        ],
+        "start": "2025-01-01T00:00:00Z"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "market.data",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "market.scope",
+        "selector": "/data",
+        "source_ref": "market.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "market.negative",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "market.scope",
+        "selector": "/negative_control",
+        "source_ref": "market.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "market.design",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "market.scope",
+        "selector": "/design",
+        "source_ref": "market.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "market.design"
+        ],
+        "id": "market.assumption.point_in_time_universe",
+        "key": "point_in_time_universe",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "point in time universe",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "market.design"
+        ],
+        "id": "market.assumption.survivorship_control",
+        "key": "survivorship_control",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "survivorship control",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "market.design"
+        ],
+        "id": "market.assumption.capacity_assessment",
+        "key": "capacity_assessment",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "capacity assessment",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "ImplementationSpec",
+      "payload": {
+        "adapter_id": "market",
+        "adapter_version": "1.0.0",
+        "core_version": "1.0.0",
+        "id": "market.implementation",
+        "method": "backtest"
+      }
+    },
+    {
+      "kind": "ModelSpec",
+      "payload": {
+        "assumption_refs": [
+          "market.assumption.point_in_time_universe",
+          "market.assumption.survivorship_control",
+          "market.assumption.capacity_assessment"
+        ],
+        "causal_graph": {},
+        "equations": "See docs/METHODS.md and the pinned implementation.",
+        "estimand": null,
+        "family": "market.backtest",
+        "id": "market.model",
+        "implementation_ref": "market.implementation",
+        "scope_ref": "market.scope"
+      }
+    },
+    {
+      "kind": "TestSpec",
+      "payload": {
+        "accept": "abs_lte",
+        "column": "zero",
+        "evidence_ref": "market.negative",
+        "id": "market.test.negative",
+        "kind": "negative_control",
+        "metric": "max_abs",
+        "target": "model",
+        "threshold": 1e-09
+      }
+    },
+    {
+      "kind": "HypothesisSpec",
+      "payload": {
+        "alternatives": [
+          "Generator/model mismatch",
+          "Measurement or selection error",
+          "Counterfactual sensitivity"
+        ],
+        "falsification_tests": [
+          "market.test.negative"
+        ],
+        "id": "market.hypothesis",
+        "null": "No effect or incompatibility under the specified operational metric.",
+        "proposition": "The frozen operational test passes in the synthetic scope."
+      }
+    },
+    {
+      "kind": "ClaimSpec",
+      "payload": {
+        "claim_type": "ASSOCIATION",
+        "hypothesis_ref": "market.hypothesis",
+        "id": "market.claim",
+        "mandatory_dependencies": [
+          "market.data"
+        ],
+        "model_ref": "market.model",
+        "proposition": "Synthetic market benchmark meets its declared operational criterion.",
+        "scope_ref": "market.scope"
+      }
+    },
+    {
+      "kind": "EvidenceLink",
+      "payload": {
+        "claim_ref": "market.claim",
+        "evidence_ref": "market.data",
+        "id": "market.support",
+        "role": "supports"
+      }
+    },
+    {
+      "kind": "CounterfactualSpec",
+      "payload": {
+        "changes": {
+          "cost_bps": 25
+        },
+        "description": "Preregistered alternative parameter scenario for this synthetic benchmark.",
+        "evidence_refs": [
+          "market.design"
+        ],
+        "id": "market.counterfactual"
+      }
+    },
+    {
+      "kind": "ProtocolSpec",
+      "payload": {
+        "claim_ref": "market.claim",
+        "counterfactual_refs": [
+          "market.counterfactual"
+        ],
+        "cutoff": "2026-01-01T00:00:00Z",
+        "dataset_ref": "market.data",
+        "id": "market.protocol",
+        "parameters": {
+          "cost_bps": 5,
+          "minimum_return": 0,
+          "periods_per_year": 365,
+          "slippage_bps": 2,
+          "test_start": "2025-01-01T00:00:00Z",
+          "training_end": "2024-12-01T00:00:00Z"
+        },
+        "registration": "retrospective",
+        "research_question": "Reproduce the market synthetic operational test.",
+        "robustness_sign_required": true,
+        "seed": 3819,
+        "test_refs": [
+          "market.test.negative"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "content": {
+        "data": [
+          {
+            "asset_return": 0.006045071521166021,
+            "decision_at": "2025-01-02T00:00:00+00:00",
+            "id": "row-0",
+            "position": 1.0,
+            "return_end": "2025-01-03T00:00:00+00:00",
+            "signal_known_at": "2025-01-01T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004765920728338143,
+            "decision_at": "2025-01-03T00:00:00+00:00",
+            "id": "row-1",
+            "position": 1.0,
+            "return_end": "2025-01-04T00:00:00+00:00",
+            "signal_known_at": "2025-01-02T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003861344299937561,
+            "decision_at": "2025-01-04T00:00:00+00:00",
+            "id": "row-2",
+            "position": 1.0,
+            "return_end": "2025-01-05T00:00:00+00:00",
+            "signal_known_at": "2025-01-03T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003996865518968962,
+            "decision_at": "2025-01-05T00:00:00+00:00",
+            "id": "row-3",
+            "position": 1.0,
+            "return_end": "2025-01-06T00:00:00+00:00",
+            "signal_known_at": "2025-01-04T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.005302699786351104,
+            "decision_at": "2025-01-06T00:00:00+00:00",
+            "id": "row-4",
+            "position": 1.0,
+            "return_end": "2025-01-07T00:00:00+00:00",
+            "signal_known_at": "2025-01-05T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0033453841499465303,
+            "decision_at": "2025-01-07T00:00:00+00:00",
+            "id": "row-5",
+            "position": 1.0,
+            "return_end": "2025-01-08T00:00:00+00:00",
+            "signal_known_at": "2025-01-06T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004021177906137509,
+            "decision_at": "2025-01-08T00:00:00+00:00",
+            "id": "row-6",
+            "position": 1.0,
+            "return_end": "2025-01-09T00:00:00+00:00",
+            "signal_known_at": "2025-01-07T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.005043378630095558,
+            "decision_at": "2025-01-09T00:00:00+00:00",
+            "id": "row-7",
+            "position": 1.0,
+            "return_end": "2025-01-10T00:00:00+00:00",
+            "signal_known_at": "2025-01-08T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004683559491723463,
+            "decision_at": "2025-01-10T00:00:00+00:00",
+            "id": "row-8",
+            "position": 1.0,
+            "return_end": "2025-01-11T00:00:00+00:00",
+            "signal_known_at": "2025-01-09T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0029413790017368074,
+            "decision_at": "2025-01-11T00:00:00+00:00",
+            "id": "row-9",
+            "position": 1.0,
+            "return_end": "2025-01-12T00:00:00+00:00",
+            "signal_known_at": "2025-01-10T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003091622342763447,
+            "decision_at": "2025-01-12T00:00:00+00:00",
+            "id": "row-10",
+            "position": 1.0,
+            "return_end": "2025-01-13T00:00:00+00:00",
+            "signal_known_at": "2025-01-11T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.006407067719110782,
+            "decision_at": "2025-01-13T00:00:00+00:00",
+            "id": "row-11",
+            "position": 1.0,
+            "return_end": "2025-01-14T00:00:00+00:00",
+            "signal_known_at": "2025-01-12T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004062186904582828,
+            "decision_at": "2025-01-14T00:00:00+00:00",
+            "id": "row-12",
+            "position": 1.0,
+            "return_end": "2025-01-15T00:00:00+00:00",
+            "signal_known_at": "2025-01-13T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0030417003833887843,
+            "decision_at": "2025-01-15T00:00:00+00:00",
+            "id": "row-13",
+            "position": 1.0,
+            "return_end": "2025-01-16T00:00:00+00:00",
+            "signal_known_at": "2025-01-14T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003622037275481033,
+            "decision_at": "2025-01-16T00:00:00+00:00",
+            "id": "row-14",
+            "position": 1.0,
+            "return_end": "2025-01-17T00:00:00+00:00",
+            "signal_known_at": "2025-01-15T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0020388699045673473,
+            "decision_at": "2025-01-17T00:00:00+00:00",
+            "id": "row-15",
+            "position": 1.0,
+            "return_end": "2025-01-18T00:00:00+00:00",
+            "signal_known_at": "2025-01-16T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003644078600959523,
+            "decision_at": "2025-01-18T00:00:00+00:00",
+            "id": "row-16",
+            "position": 1.0,
+            "return_end": "2025-01-19T00:00:00+00:00",
+            "signal_known_at": "2025-01-17T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004452207155927976,
+            "decision_at": "2025-01-19T00:00:00+00:00",
+            "id": "row-17",
+            "position": 1.0,
+            "return_end": "2025-01-20T00:00:00+00:00",
+            "signal_known_at": "2025-01-18T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0017507223399876636,
+            "decision_at": "2025-01-20T00:00:00+00:00",
+            "id": "row-18",
+            "position": 1.0,
+            "return_end": "2025-01-21T00:00:00+00:00",
+            "signal_known_at": "2025-01-19T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003674893565561532,
+            "decision_at": "2025-01-21T00:00:00+00:00",
+            "id": "row-19",
+            "position": 1.0,
+            "return_end": "2025-01-22T00:00:00+00:00",
+            "signal_known_at": "2025-01-20T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0035870990236895944,
+            "decision_at": "2025-01-22T00:00:00+00:00",
+            "id": "row-20",
+            "position": 1.0,
+            "return_end": "2025-01-23T00:00:00+00:00",
+            "signal_known_at": "2025-01-21T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0036941330585177827,
+            "decision_at": "2025-01-23T00:00:00+00:00",
+            "id": "row-21",
+            "position": 1.0,
+            "return_end": "2025-01-24T00:00:00+00:00",
+            "signal_known_at": "2025-01-22T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003097641700449184,
+            "decision_at": "2025-01-24T00:00:00+00:00",
+            "id": "row-22",
+            "position": 1.0,
+            "return_end": "2025-01-25T00:00:00+00:00",
+            "signal_known_at": "2025-01-23T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004553089091440434,
+            "decision_at": "2025-01-25T00:00:00+00:00",
+            "id": "row-23",
+            "position": 1.0,
+            "return_end": "2025-01-26T00:00:00+00:00",
+            "signal_known_at": "2025-01-24T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0033114991060665573,
+            "decision_at": "2025-01-26T00:00:00+00:00",
+            "id": "row-24",
+            "position": 1.0,
+            "return_end": "2025-01-27T00:00:00+00:00",
+            "signal_known_at": "2025-01-25T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0058212873746240346,
+            "decision_at": "2025-01-27T00:00:00+00:00",
+            "id": "row-25",
+            "position": 1.0,
+            "return_end": "2025-01-28T00:00:00+00:00",
+            "signal_known_at": "2025-01-26T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004838744153157432,
+            "decision_at": "2025-01-28T00:00:00+00:00",
+            "id": "row-26",
+            "position": 1.0,
+            "return_end": "2025-01-29T00:00:00+00:00",
+            "signal_known_at": "2025-01-27T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004823528654340797,
+            "decision_at": "2025-01-29T00:00:00+00:00",
+            "id": "row-27",
+            "position": 1.0,
+            "return_end": "2025-01-30T00:00:00+00:00",
+            "signal_known_at": "2025-01-28T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0032228538924487906,
+            "decision_at": "2025-01-30T00:00:00+00:00",
+            "id": "row-28",
+            "position": 1.0,
+            "return_end": "2025-01-31T00:00:00+00:00",
+            "signal_known_at": "2025-01-29T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004978795218163206,
+            "decision_at": "2025-01-31T00:00:00+00:00",
+            "id": "row-29",
+            "position": 1.0,
+            "return_end": "2025-02-01T00:00:00+00:00",
+            "signal_known_at": "2025-01-30T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004250835750884096,
+            "decision_at": "2025-02-01T00:00:00+00:00",
+            "id": "row-30",
+            "position": 1.0,
+            "return_end": "2025-02-02T00:00:00+00:00",
+            "signal_known_at": "2025-01-31T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.003979482688175064,
+            "decision_at": "2025-02-02T00:00:00+00:00",
+            "id": "row-31",
+            "position": 1.0,
+            "return_end": "2025-02-03T00:00:00+00:00",
+            "signal_known_at": "2025-02-01T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.002386829766191024,
+            "decision_at": "2025-02-03T00:00:00+00:00",
+            "id": "row-32",
+            "position": 1.0,
+            "return_end": "2025-02-04T00:00:00+00:00",
+            "signal_known_at": "2025-02-02T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.001574899086341247,
+            "decision_at": "2025-02-04T00:00:00+00:00",
+            "id": "row-33",
+            "position": 1.0,
+            "return_end": "2025-02-05T00:00:00+00:00",
+            "signal_known_at": "2025-02-03T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.005713644295946958,
+            "decision_at": "2025-02-05T00:00:00+00:00",
+            "id": "row-34",
+            "position": 1.0,
+            "return_end": "2025-02-06T00:00:00+00:00",
+            "signal_known_at": "2025-02-04T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0033866942245545277,
+            "decision_at": "2025-02-06T00:00:00+00:00",
+            "id": "row-35",
+            "position": 1.0,
+            "return_end": "2025-02-07T00:00:00+00:00",
+            "signal_known_at": "2025-02-05T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0038873765744892414,
+            "decision_at": "2025-02-07T00:00:00+00:00",
+            "id": "row-36",
+            "position": 1.0,
+            "return_end": "2025-02-08T00:00:00+00:00",
+            "signal_known_at": "2025-02-06T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0036236798812404694,
+            "decision_at": "2025-02-08T00:00:00+00:00",
+            "id": "row-37",
+            "position": 1.0,
+            "return_end": "2025-02-09T00:00:00+00:00",
+            "signal_known_at": "2025-02-07T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.0023334717919212115,
+            "decision_at": "2025-02-09T00:00:00+00:00",
+            "id": "row-38",
+            "position": 1.0,
+            "return_end": "2025-02-10T00:00:00+00:00",
+            "signal_known_at": "2025-02-08T23:00:00+00:00"
+          },
+          {
+            "asset_return": 0.004126250294214293,
+            "decision_at": "2025-02-10T00:00:00+00:00",
+            "id": "row-39",
+            "position": 1.0,
+            "return_end": "2025-02-11T00:00:00+00:00",
+            "signal_known_at": "2025-02-09T23:00:00+00:00"
+          }
+        ],
+        "design": [
+          {
+            "assumptions": [
+              "point_in_time_universe",
+              "survivorship_control",
+              "capacity_assessment"
+            ],
+            "generator": "fcea.examples.builders.v1",
+            "id": "design",
+            "note": "Declared properties of the synthetic generator, not empirical certificates.",
+            "seed": 9281,
+            "synthetic": true
+          }
+        ],
+        "negative_control": [
+          {
+            "id": "nc-0",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-1",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-2",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-3",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-4",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-5",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-6",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-7",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-8",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-9",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-10",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-11",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-12",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-13",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-14",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-15",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-16",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-17",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-18",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-19",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-20",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-21",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-22",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-23",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-24",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-25",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-26",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-27",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-28",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-29",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-30",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-31",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-32",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-33",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-34",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-35",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-36",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-37",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-38",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-39",
+            "zero": 0.0
+          }
+        ]
+      },
+      "metadata": {
+        "dependency_keys": [
+          "fcea-synthetic-generator-seed-9281"
+        ],
+        "id": "market.source",
+        "known_at": "2025-12-31T00:00:00Z",
+        "legal_basis": "Author-generated synthetic benchmark data",
+        "media_type": "application/json",
+        "origin": "synthetic://fcea/market",
+        "redistributable": true,
+        "synthetic": true
+      }
+    }
+  ]
+}

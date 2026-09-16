@@ -1,0 +1,20 @@
+services:
+  fcea:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - fcea-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    mem_limit: 512m
+    init: true
+    restart: unless-stopped
+volumes:
+  fcea-data:

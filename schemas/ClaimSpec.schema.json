@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_type": {
+      "enum": [
+        "OBSERVATION",
+        "ASSOCIATION",
+        "CAUSAL_EFFECT",
+        "MECHANISM",
+        "EXISTENTIAL",
+        "UNIVERSAL_NEGATIVE",
+        "MODEL_COMPATIBILITY",
+        "INTENT",
+        "LEGAL_GUILT"
+      ],
+      "type": "string"
+    },
+    "closure_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "coverage_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "high_impact": {
+      "type": "boolean"
+    },
+    "hypothesis_ref": {
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "mandatory_dependencies": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "model_ref": {
+      "type": "string"
+    },
+    "optional_dependencies": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "prohibited_inferences": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "proof_routes": {
+      "items": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "proposition": {
+      "type": "string"
+    },
+    "required_gates": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "scope_ref": {
+      "type": "string"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "proposition",
+    "claim_type",
+    "scope_ref",
+    "hypothesis_ref",
+    "model_ref",
+    "mandatory_dependencies"
+  ],
+  "title": "ClaimSpec",
+  "type": "object"
+}

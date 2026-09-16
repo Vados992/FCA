@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fcea"
+version = "1.0.0"
+description = "Federated Causal Evidence & Falsification Architecture — research-local implementation"
+requires-python = ">=3.11"
+authors = [{name = "Vadym Tsinderhoz"}]
+license = {text = "Apache-2.0"}
+readme = "README.md"
+dependencies = []
+
+[project.scripts]
+fcea = "fcea.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["fcea*"]
+
+[tool.setuptools.package-data]
+fcea = ["dashboard/*.html", "dashboard/*.css", "dashboard/*.js", "storage/*.sql", "examples/*.json"]

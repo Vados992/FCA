@@ -1,0 +1,6 @@
+{
+  "format": "fcea-runtime-lock-1",
+  "python": ">=3.11",
+  "runtime_dependencies": [],
+  "note": "Runtime uses only the Python standard library. Exact Python/platform and application file digests are recorded per run. The interpreter and OS are supplied by the deployment environment."
+}

@@ -1,0 +1,95 @@
+{
+  "synthetic": true,
+  "results": [
+    {
+      "example": "policy-rct",
+      "run_id": "run-c4adc45f1395462797bc151825fa2a29",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 2.0562278779166077,
+      "blockers": []
+    },
+    {
+      "example": "policy-did",
+      "run_id": "run-b4afa782958d4b5fb2bd0f32c4017789",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 1.9518016410742305,
+      "blockers": []
+    },
+    {
+      "example": "policy-iv",
+      "run_id": "run-d3975267a1c54b24b01feb5a050445f5",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 1.9935973179475133,
+      "blockers": []
+    },
+    {
+      "example": "science",
+      "run_id": "run-bae00c243dc8459fa1125291d16e7141",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": -0.015079985732057821,
+      "blockers": []
+    },
+    {
+      "example": "market",
+      "run_id": "run-0239deff7083432db455b98c3d4fb7a2",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 0.1687750757079196,
+      "blockers": []
+    },
+    {
+      "example": "supply",
+      "run_id": "run-1e3136485dcd46ae90c732c367775bee",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 9.0,
+      "blockers": []
+    },
+    {
+      "example": "climate",
+      "run_id": "run-68351603b1974064bff44e93f7c96b6b",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 1.2002561916307146,
+      "blockers": []
+    },
+    {
+      "example": "physics",
+      "run_id": "run-7a298d2caedc4f38bcedf7e4ce2cc5b0",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 2.4492935982947064e-16,
+      "blockers": []
+    },
+    {
+      "example": "integrity",
+      "run_id": "run-f49d1f4e36e64bddbc948b816bc7b61a",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 1.0,
+      "blockers": []
+    },
+    {
+      "example": "public-health",
+      "run_id": "run-440c1ff8bbcc402c8c19bc0675376e43",
+      "scientific_state": "SUPPORTED",
+      "validity_state": "VALID",
+      "gates_passed": 16,
+      "estimate": 2.0562278779166077,
+      "blockers": []
+    }
+  ]
+}

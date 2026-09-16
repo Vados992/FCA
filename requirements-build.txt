@@ -1,0 +1,3 @@
+# Build/packaging checks only. These packages are not imported by the FCEA runtime.
+setuptools==84.0.0
+wheel==0.48.0

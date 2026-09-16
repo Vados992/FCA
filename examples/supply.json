@@ -1,0 +1,427 @@
+{
+  "description": "SYNTHETIC; no empirical validation claim.",
+  "expected": {
+    "all_gates": "PASS",
+    "scientific_state": "SUPPORTED",
+    "validity_state": "VALID"
+  },
+  "protocol_ref": "supply.protocol",
+  "records": [
+    {
+      "kind": "ScopeSpec",
+      "payload": {
+        "assumptions": [
+          "capacity_validity"
+        ],
+        "domains": [
+          "supply_chain"
+        ],
+        "end": "2026-01-01T00:00:00Z",
+        "id": "supply.scope",
+        "model_families": [
+          "supply.max_flow"
+        ],
+        "populations": [
+          "synthetic-supply"
+        ],
+        "precision": "synthetic-units-v1",
+        "regimes": [
+          "synthetic"
+        ],
+        "start": "2025-01-01T00:00:00Z"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "supply.data",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "supply.scope",
+        "selector": "/data",
+        "source_ref": "supply.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "supply.negative",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "supply.scope",
+        "selector": "/negative_control",
+        "source_ref": "supply.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "EvidenceItem",
+      "payload": {
+        "id": "supply.design",
+        "known_at": "2025-12-31T00:00:00Z",
+        "scope_ref": "supply.scope",
+        "selector": "/design",
+        "source_ref": "supply.source",
+        "transform": "json.pointer.v1",
+        "units": "1"
+      }
+    },
+    {
+      "kind": "AssumptionSpec",
+      "payload": {
+        "causal_only": false,
+        "evidence_refs": [
+          "supply.design"
+        ],
+        "id": "supply.assumption.capacity_validity",
+        "key": "capacity_validity",
+        "rationale": "Synthetic generator fixes this condition; independent domain validation is required for real data.",
+        "statement": "capacity validity",
+        "status": "SUPPORTED"
+      }
+    },
+    {
+      "kind": "ImplementationSpec",
+      "payload": {
+        "adapter_id": "supply",
+        "adapter_version": "1.0.0",
+        "core_version": "1.0.0",
+        "id": "supply.implementation",
+        "method": "max_flow"
+      }
+    },
+    {
+      "kind": "ModelSpec",
+      "payload": {
+        "assumption_refs": [
+          "supply.assumption.capacity_validity"
+        ],
+        "causal_graph": {},
+        "equations": "See docs/METHODS.md and the pinned implementation.",
+        "estimand": null,
+        "family": "supply.max_flow",
+        "id": "supply.model",
+        "implementation_ref": "supply.implementation",
+        "scope_ref": "supply.scope"
+      }
+    },
+    {
+      "kind": "TestSpec",
+      "payload": {
+        "accept": "abs_lte",
+        "column": "zero",
+        "evidence_ref": "supply.negative",
+        "id": "supply.test.negative",
+        "kind": "negative_control",
+        "metric": "max_abs",
+        "target": "model",
+        "threshold": 1e-09
+      }
+    },
+    {
+      "kind": "HypothesisSpec",
+      "payload": {
+        "alternatives": [
+          "Generator/model mismatch",
+          "Measurement or selection error",
+          "Counterfactual sensitivity"
+        ],
+        "falsification_tests": [
+          "supply.test.negative"
+        ],
+        "id": "supply.hypothesis",
+        "null": "No effect or incompatibility under the specified operational metric.",
+        "proposition": "The frozen operational test passes in the synthetic scope."
+      }
+    },
+    {
+      "kind": "ClaimSpec",
+      "payload": {
+        "claim_type": "MODEL_COMPATIBILITY",
+        "hypothesis_ref": "supply.hypothesis",
+        "id": "supply.claim",
+        "mandatory_dependencies": [
+          "supply.data"
+        ],
+        "model_ref": "supply.model",
+        "proposition": "Synthetic supply benchmark meets its declared operational criterion.",
+        "scope_ref": "supply.scope"
+      }
+    },
+    {
+      "kind": "EvidenceLink",
+      "payload": {
+        "claim_ref": "supply.claim",
+        "evidence_ref": "supply.data",
+        "id": "supply.support",
+        "role": "supports"
+      }
+    },
+    {
+      "kind": "CounterfactualSpec",
+      "payload": {
+        "changes": {
+          "disabled_edges": [
+            "SA"
+          ]
+        },
+        "description": "Preregistered alternative parameter scenario for this synthetic benchmark.",
+        "evidence_refs": [
+          "supply.design"
+        ],
+        "id": "supply.counterfactual"
+      }
+    },
+    {
+      "kind": "ProtocolSpec",
+      "payload": {
+        "claim_ref": "supply.claim",
+        "counterfactual_refs": [
+          "supply.counterfactual"
+        ],
+        "cutoff": "2026-01-01T00:00:00Z",
+        "dataset_ref": "supply.data",
+        "id": "supply.protocol",
+        "parameters": {
+          "disabled_edges": [],
+          "required_flow": 3,
+          "sink": "T",
+          "source": "S"
+        },
+        "registration": "retrospective",
+        "research_question": "Reproduce the supply synthetic operational test.",
+        "robustness_sign_required": true,
+        "seed": 3819,
+        "test_refs": [
+          "supply.test.negative"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "content": {
+        "data": [
+          {
+            "capacity": 6,
+            "from": "S",
+            "id": "SA",
+            "to": "A"
+          },
+          {
+            "capacity": 4,
+            "from": "S",
+            "id": "SB",
+            "to": "B"
+          },
+          {
+            "capacity": 5,
+            "from": "A",
+            "id": "AT",
+            "to": "T"
+          },
+          {
+            "capacity": 4,
+            "from": "B",
+            "id": "BT",
+            "to": "T"
+          },
+          {
+            "capacity": 1,
+            "from": "A",
+            "id": "AB",
+            "to": "B"
+          }
+        ],
+        "design": [
+          {
+            "assumptions": [
+              "capacity_validity"
+            ],
+            "generator": "fcea.examples.builders.v1",
+            "id": "design",
+            "note": "Declared properties of the synthetic generator, not empirical certificates.",
+            "seed": 9281,
+            "synthetic": true
+          }
+        ],
+        "negative_control": [
+          {
+            "id": "nc-0",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-1",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-2",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-3",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-4",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-5",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-6",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-7",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-8",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-9",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-10",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-11",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-12",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-13",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-14",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-15",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-16",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-17",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-18",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-19",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-20",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-21",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-22",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-23",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-24",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-25",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-26",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-27",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-28",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-29",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-30",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-31",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-32",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-33",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-34",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-35",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-36",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-37",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-38",
+            "zero": 0.0
+          },
+          {
+            "id": "nc-39",
+            "zero": 0.0
+          }
+        ]
+      },
+      "metadata": {
+        "dependency_keys": [
+          "fcea-synthetic-generator-seed-9281"
+        ],
+        "id": "supply.source",
+        "known_at": "2025-12-31T00:00:00Z",
+        "legal_basis": "Author-generated synthetic benchmark data",
+        "media_type": "application/json",
+        "origin": "synthetic://fcea/supply",
+        "redistributable": true,
+        "synthetic": true
+      }
+    }
+  ]
+}

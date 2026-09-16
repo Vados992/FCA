@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+var/
+*.sqlite*
+*.key
+*.pem
+.env
+auth.json
+credentials.local.json
+node_modules/
+validation-output/

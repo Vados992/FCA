@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accept": {
+      "enum": [
+        "lte",
+        "gte",
+        "abs_lte",
+        "no_rejection"
+      ],
+      "type": "string"
+    },
+    "column": {
+      "type": "string"
+    },
+    "critical": {
+      "type": "boolean"
+    },
+    "evidence_ref": {
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "falsifier",
+        "negative_control",
+        "placebo"
+      ],
+      "type": "string"
+    },
+    "metric": {
+      "enum": [
+        "mean",
+        "max_abs",
+        "difference",
+        "count",
+        "z_pvalue"
+      ],
+      "type": "string"
+    },
+    "parameters": {
+      "additionalProperties": {},
+      "type": "object"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "target": {
+      "enum": [
+        "hypothesis",
+        "model"
+      ],
+      "type": "string"
+    },
+    "threshold": {
+      "type": "number"
+    },
+    "version": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "target",
+    "kind",
+    "evidence_ref",
+    "metric",
+    "column",
+    "accept",
+    "threshold"
+  ],
+  "title": "TestSpec",
+  "type": "object"
+}
